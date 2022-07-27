@@ -46,7 +46,7 @@ donnees_unique$expertise = as.factor(donnees_unique$expertise)
 
   
 #Regarder la structure de la table (type de data pour les colonnes)
-str(donnees_select)
+str(donnees_unique)
 
 
 #Changer le game_mode en facteur
@@ -394,8 +394,7 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
            title = "Speed and experience")
     
     #Modele du temps a garder selon l'experience
-    mod_guard_xp = brm(guard_time_total ~ cumul_xp_killer, data = data_expert)
-    
+    mod_guard_xp = brm(guard_time_total ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
     
     #Graphique de l'intercept, de la variable x et des chaines
     plot(mod_guard_xp)
@@ -412,7 +411,7 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     #Mettre les residus du modele dans un variable
     residus = resid(mod_guard_xp)
     
-    # Vérifier la normalité des résidus
+    # Verifier la normalite des residus
     hist(residus, xlab = "Résidus", ylab = "Nombre d’observations", 
          main = '', col = 'darkgray', cex.lab = 1.5)
     
@@ -426,6 +425,8 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     abline(h = 0, lty = 2, col = "red")
     
     
+    #Graphique de la relation (non-lineaire)
+    plot(conditional_effects(mod_guard_xp), points = TRUE)
     
     
     
