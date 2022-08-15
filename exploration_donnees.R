@@ -382,16 +382,23 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
   #Graphiques de la vitesse et temps a garder selon l'experience
     
     #Temps garde
-    ggplot(data_expert, aes(x = cumul_xp_killer, y = guard_time_total)) +
+    ggplot(data_expert, aes(x = expertise, y = guard_time_total)) +
       geom_point() +
       labs(x = "Cumul XP", y = "Time spent guarding",
            title = "Guarding time and experience")
     
+        #version boxplot
+        plot(data_expert$guard_time_total ~ factor(data_expert$expertise))
+    
     #Vitesse
-    ggplot(data_expert, aes(x = cumul_xp_killer, y = pred_speed)) +
+    ggplot(data_expert, aes(x = expertise, y = pred_speed)) +
       geom_point() +
       labs(x = "Cumul XP", y = "Vitesse du predateur",
            title = "Speed and experience")
+    
+        #version boxplot
+        plot(data_expert$pred_speed ~ factor(data_expert$expertise))
+    
     
     #Modele du temps a garder selon l'experience
     mod_guard_xp = brm(guard_time_total ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
