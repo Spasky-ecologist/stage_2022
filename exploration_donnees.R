@@ -27,6 +27,7 @@ donnees_small = select(donnees, environment_id, predator_id, pred_game_duration,
                        pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total, latency_1st_capture, 
                        prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
+
 #Tableau unique des predateurs
 donnees_unique = unique(donnees_small)
 
@@ -377,6 +378,18 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     #Combien de matches chacun des predateur a joue dans l'echantillon des 19 predateurs
     table(unlist(data_expert$predator_id))
     
+      #Ajouter colonne pour le sqrt de cumul xp killer
+      data_expert[, ":=" (cumul_xp_killer_sqrt = sqrt(cumul_xp_killer))]
+    
+      #Fonction pour standariser
+      standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
+        sd(x, na.rm = TRUE)}
+    
+      #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
+      data_expert[, c("Zcumul_xp_killer") :=
+           lapply(.SD, standardize), 
+         .SDcols = 17]
+    
     
 
   #Graphiques de la vitesse et temps a garder selon l'experience
@@ -402,6 +415,26 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     
     #Modele du temps a garder selon l'experience
     mod_guard_xp = brm(guard_time_total ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
+    
+      #Formule pour le modele
+      form_guard = brmsformula(guard_time_total ~ 0 + cumul_xp_killer + (1 | predator_id), 
+                         sigma ~ 0 + cumul_xp_killer) +
+          gaussian()
+    
+      #Modele brm plus complet
+      fit_guard <- brm(formula = form_guard,
+                  prior = NULL,
+                  iter = 1500,
+                  warmup = 500,
+                  thin = 4,
+                  chains = 4,
+                  seed = 123,
+                  control = list(adapt_delta = 0.99),
+                  save_pars = save_pars(all = TRUE),
+                  sample_prior = FALSE,
+                  data = data_expert)
+    
+    
     
     #Graphique de l'intercept, de la variable x et des chaines
     plot(mod_guard_xp)
