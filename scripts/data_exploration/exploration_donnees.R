@@ -127,7 +127,7 @@ xp_450_480_subset = xp_450_480[1:50, ]
 sum(donnees_select$cumul_xp_killer >= 420 & donnees_select$cumul_xp_killer < 450)
 
   #Creer un tableau avec 50 lignes des xp entre 420 et 450 (les 50 1e lignes)
-  xp_420_450 = subset(donnees_select, donnees_select$cumul_xp_killer >= 420 & donnees_select$cumul_xp_killer < 450)
+  xp_420_450 <- subset(donnees_select, donnees_select$cumul_xp_killer >= 420 & donnees_select$cumul_xp_killer < 450)
   xp_420_450_subset = xp_420_450[1:50, ]
   
   
