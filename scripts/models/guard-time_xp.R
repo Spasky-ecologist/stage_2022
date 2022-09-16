@@ -112,7 +112,6 @@ priors <- c(
 
 # Model specifications -----------------------------------------------------
 
-
 #Modele complet
 modele_guard_xp <- brm(formula = form_guard,
                   warmup = 500,
