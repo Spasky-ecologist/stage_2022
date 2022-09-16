@@ -17,7 +17,7 @@ objects(grep("brms", search()))
 donnees <- read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv")
 
 #Selectionner les variables d'interets dans la table "donnees"
-donnees_select = select(donnees, match_encode_id, game_mode, environment_id, prey_avatar_id, predator_avatar_id, predator_id, 
+donnees_select <- select(donnees, match_encode_id, game_mode, environment_id, prey_avatar_id, predator_avatar_id, predator_id, 
                         prey_id, rank, pred_game_duration, prey_game_duration, total_chase_duration, avg_chase_duration, 
                         pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total, latency_1st_capture, 
                         prey_total_unhook_count, hunting_success, cumul_xp_killer)
