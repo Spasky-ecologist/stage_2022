@@ -29,7 +29,7 @@ donnees_small = select(donnees, environment_id, predator_id, pred_game_duration,
 
 
 #Tableau unique des predateurs
-donnees_unique = unique(donnees_small)
+donnees_unique <- unique(donnees_small)
 
 #Transformer en datatable pour mettre les colonnes
 is.data.table(donnees_unique)
