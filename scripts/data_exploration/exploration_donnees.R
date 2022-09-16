@@ -55,7 +55,7 @@ str(donnees_unique)
 
 
 #Changer le game_mode en facteur
-donnees_select$game_mode = as.factor(donnees_select$game_mode)
+donnees_select$game_mode <- as.factor(donnees_select$game_mode)
 
   #Regarder les niveaux du facteur
   levels(donnees_select$game_mode)
