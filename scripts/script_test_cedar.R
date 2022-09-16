@@ -80,8 +80,8 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_guard = brmsformula(guard_time_total ~ 0 + Zcumul_xp_killer + (1 | predator_id), 
-                         sigma ~ 0 + Zcumul_xp_killer) +
+form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
+                         sigma ~ 1 + Zcumul_xp_killer) +
   gaussian()
 
 
