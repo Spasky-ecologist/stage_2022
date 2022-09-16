@@ -5,7 +5,7 @@ options(mc.cores = parallel::detectCores())
 
 
 # ==========================================================================
-# 1. Load libraries and import the data 
+# 1. Load libraries and import the data
 # ==========================================================================
 
 
@@ -21,7 +21,7 @@ library(parallel)
 # Import the data ----------------------------------------------------------
 
 # Folder path Compute Canada
-folder <- file.path("/home", "ab991036", "projects", "def-monti", 
+folder <- file.path("/home", "ab991036", "projects", "def-monti",
                     "ab991036", "stage_2022", "data")
 
 # Import the data
@@ -49,12 +49,12 @@ data <- unique(data)
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Standardisation function
-standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
+standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
-              lapply(.SD, standardize), 
+              lapply(.SD, standardize),
             .SDcols = 4]
 
 # ==========================================================================
@@ -75,7 +75,7 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_guard <- brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
+form_guard <- brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id),
                          sigma ~ 1 + Zcumul_xp_killer) +
   gaussian()
 
@@ -117,7 +117,7 @@ modele_guard_xp <- brm(formula = form_guard,
                   warmup = 500,
                   iter = 3500,
                   thin = 10,
-                  chains = 4, 
+                  chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",
                   seed = 123,
