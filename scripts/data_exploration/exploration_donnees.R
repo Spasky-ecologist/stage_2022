@@ -11,10 +11,10 @@ library(bayesplot)
 
 
 #Rappel des fonctions dans le package brms
-objects(grep("brms",search()))
+objects(grep("brms", search()))
 
 #Lire le fichier excel de donnees
-donnees = read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv")
+donnees <- read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv")
 
 #Selectionner les variables d'interets dans la table "donnees"
 donnees_select = select(donnees, match_encode_id, game_mode, environment_id, prey_avatar_id, predator_avatar_id, predator_id, 
