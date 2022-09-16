@@ -23,7 +23,7 @@ donnees_select = select(donnees, match_encode_id, game_mode, environment_id, pre
                         prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
 #Selectionner les colonnes d'interets mais moins pour faire un tableau des predateur unique
-donnees_small = select(donnees, environment_id, predator_id, pred_game_duration, total_chase_duration, avg_chase_duration, 
+donnees_small <- select(donnees, environment_id, predator_id, pred_game_duration, total_chase_duration, avg_chase_duration, 
                        pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total, latency_1st_capture, 
                        prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
