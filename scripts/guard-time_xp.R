@@ -12,10 +12,9 @@ options(mc.cores = parallel::detectCores())
 # Packages -----------------------------------------------------------------
 
 library(data.table)
-library(ggplot2)
 library(brms)
-library(bayesplot)
-library(cmdstanr)
+library(parallel)
+
 
 
 # Import the data ----------------------------------------------------------
@@ -106,7 +105,6 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 modele_guard_xp = brm(formula = form_guard,
                   warmup = 500,
                   iter = 1500,
-                  warmup = 500,
                   thin = 4,
                   chains = 4, 
                   threads = threading(10),
