@@ -14,7 +14,7 @@ options(mc.cores = parallel::detectCores())
 library(data.table)
 library(brms)
 library(parallel)
-library(cmdstanr)
+#library(cmdstanr)
 
 
 
@@ -108,8 +108,8 @@ modele_guard_xp = brm(formula = form_guard,
                   iter = 1500,
                   thin = 4,
                   chains = 4, 
-                  threads = threading(10),
-                  backend = "cmdstanr",
+                  #threads = threading(10),
+                  #backend = "cmdstanr",
                   seed = 123,
                   control = list(adapt_delta = 0.95),
                   save_pars = save_pars(all = TRUE),
