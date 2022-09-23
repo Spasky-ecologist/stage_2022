@@ -14,7 +14,7 @@ library(bayesplot)
 objects(grep("brms",search()))
 
 #Lire le fichier excel de donnees
-donnees = read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Léveillé/data/02_final-data.csv")
+donnees = read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv")
 
 #Selectionner les variables d'interets dans la table "donnees"
 donnees_select = select(donnees, match_encode_id, game_mode, environment_id, prey_avatar_id, predator_avatar_id, predator_id, 
@@ -388,7 +388,7 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
       #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
       data_expert[, c("Zcumul_xp_killer") :=
            lapply(.SD, standardize), 
-         .SDcols = 17]
+         .SDcols = 16]
     
     
 
@@ -417,8 +417,8 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     mod_guard_xp = brm(guard_time_total ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
     
       #Formule pour le modele
-      form_guard = brmsformula(guard_time_total ~ 0 + cumul_xp_killer + (1 | predator_id), 
-                         sigma ~ 0 + cumul_xp_killer) +
+      form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
+                         sigma ~ 1 + Zcumul_xp_killer) +
           gaussian()
     
       #Modele brm plus complet
@@ -437,19 +437,19 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     
     
     #Graphique de l'intercept, de la variable x et des chaines
-    plot(mod_guard_xp)
+    plot(fit_guard)
     
     #La moyenne de l'echantillon (noir) vs les moyennes des sims
-    bayesplot_grid(pp_check(mod_guard_xp, type = 'stat', stat = mean))
+    bayesplot_grid(pp_check(fit_guard, type = 'stat', stat = mean))
     
     #Distribution de notre echantillon vs les sims
-    bayesplot_grid(pp_check(mod_guard_xp, ndraws = 100))
+    bayesplot_grid(pp_check(fit_guard, ndraws = 100))
     
     #Resume du modele
-    summary(mod_guard_xp)
+    summary(fit_guard)
     
     #Mettre les residus du modele dans un variable
-    residus = resid(mod_guard_xp)
+    residus = resid(fit_guard)
     
     # Verifier la normalite des residus
     hist(residus, xlab = "Résidus", ylab = "Nombre d’observations", 
@@ -457,11 +457,11 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     
     
     #QQplot de normalite pour les residus du modele
-    qqnorm(resid(mod_guard_xp))
-    qqline(resid(mod_guard_xp))
+    qqnorm(resid(fit_guard))
+    qqline(resid(fit_guard))
     
     # Homogénéité des résidus
-    plot(resid(mod_guard_xp) ~ fitted(mod_guard_xp), ylab = "Résidus", xlab = "Valeurs prédites")
+    plot(resid(fit_guard) ~ fitted(mod_guard_xp), ylab = "Résidus", xlab = "Valeurs prédites")
     abline(h = 0, lty = 2, col = "red")
     
     

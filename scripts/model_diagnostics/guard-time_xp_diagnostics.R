@@ -53,6 +53,40 @@ plot(model)
 plot(conditional_effects(model))
 
 
+#La moyenne de l'echantillon (noir) vs les moyennes des sims
+bayesplot_grid(pp_check(model, type = 'stat', stat = mean))
+
+
+#Distribution de notre echantillon vs les sims
+bayesplot_grid(pp_check(model, ndraws = 100))
+
+
+#Resume du modele
+summary(model)
+
+
+#Mettre les residus du modele dans un variable
+residus = resid(model)
+
+
+# Verifier la normalite des residus
+hist(residus, xlab = "Résidus", ylab = "Nombre d’observations", 
+     main = '', col = 'darkgray', cex.lab = 1.5)
+
+
+
+#QQplot de normalite pour les residus du modele
+qqnorm(resid(model))
+qqline(resid(model))
+
+
+# Homogénéité des résidus
+plot(resid(model) ~ fitted(model), ylab = "Résidus", xlab = "Valeurs prédites")
+abline(h = 0, lty = 2, col = "red")
+
+
+
+
 # Predictions diagnostics -----------------------------------------------
 
 # Observed y outcomes vs posterior predicted outcomes
