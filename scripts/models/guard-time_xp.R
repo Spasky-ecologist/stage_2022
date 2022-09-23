@@ -105,7 +105,7 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 #Modele complet
 modele_guard_xp = brm(formula = form_guard,
                   warmup = 500,
-                  iter = 2000,
+                  iter = 2500,
                   thin = 4,
                   chains = 4, 
                   threads = threading(12),
