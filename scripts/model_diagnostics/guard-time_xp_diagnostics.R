@@ -49,6 +49,8 @@ model <- readRDS("outputs/R_objects/guard_time_xp_base_model.rds")
 plot(model)
 
 
+#Model relation plot
+plot(conditional_effects(model))
 
 
 # Predictions diagnostics -----------------------------------------------
