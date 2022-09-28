@@ -48,11 +48,11 @@ data = unique(data)
 
 # Standardise the variables (Z-scores) -------------------------------------
 
-#Fonction pour standardiser
+#Standardisation function
 standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
     sd(x, na.rm = TRUE)}
 
-#Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
+#Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
               lapply(.SD, standardize), 
             .SDcols = 3]
