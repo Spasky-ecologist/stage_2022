@@ -26,7 +26,7 @@ folder = file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data = fread(file.path(folder, "02_final-data.csv"),
-              select = c("predator_id", "guard_time_total", "cumul_xp_killer", "match_encode_id"))
+              select = c("match_encode_id", "predator_id", "guard_time_total", "cumul_xp_killer", ))
 
 data = unique(data)
 
@@ -55,7 +55,7 @@ standardize = function (x) {(x - mean(x, na.rm = TRUE)) /
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
               lapply(.SD, standardize), 
-            .SDcols = 3]
+            .SDcols = 4]
 
 # ==========================================================================
 # ==========================================================================
@@ -69,7 +69,7 @@ data[, c("Zcumul_xp_killer") :=
 
 
 # ==========================================================================
-# 3. Build the model
+# 3. Build the model(s)
 # ==========================================================================
 
 
@@ -81,6 +81,21 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 
 
 
+# priors ----------------------------------------------------------------
+
+priors <- c(
+  # priors on fixed effects
+  set_prior("normal(0, 2)",
+            class = "b"),
+  # prior on the intercept
+  set_prior("normal(0, 2)",
+            class = "Intercept"),
+  # priors on variance parameters
+  set_prior("normal(0, 1)",
+            class = "sd")
+)
+
+
 # ==========================================================================
 # ==========================================================================
 
@@ -91,7 +106,7 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 
 
 # ==========================================================================
-# 4. Run the model
+# 4. Run the model(s)
 # ==========================================================================
 
 
@@ -101,14 +116,16 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 #Modele complet
 modele_guard_xp = brm(formula = form_guard,
                   warmup = 500,
-                  iter =2500,
-                  thin = 8,
+                  iter = 1500,
+                  thin = 4,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
                   seed = 123,
+                  prior = priors,
                   control = list(adapt_delta = 0.95),
                   save_pars = save_pars(all = TRUE),
+                  sample_prior = TRUE,
                   data = data)
 
 
