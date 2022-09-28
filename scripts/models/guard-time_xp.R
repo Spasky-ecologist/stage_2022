@@ -1,4 +1,4 @@
-#Script test pour 1e envoi Cedar - Patrice Leveille
+#Model script for guard time as a function of predator experience - Patrice Leveille
 
 # Detect number of cores
 options(mc.cores = parallel::detectCores())
