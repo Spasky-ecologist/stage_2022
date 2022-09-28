@@ -26,9 +26,9 @@ folder = file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data = fread(file.path(folder, "02_final-data.csv"),
-              select = c("predator_id", "guard_time_total", "cumul_xp_killer"))
+              select = c("predator_id", "guard_time_total", "cumul_xp_killer", "match_encode_id"))
 
-
+data = unique(data)
 
 # ==========================================================================
 # ==========================================================================
@@ -44,11 +44,6 @@ data = fread(file.path(folder, "02_final-data.csv"),
 
 
 # Transform ----------------------------------------------------------------
-
-
-#Ajouter colonne pour le sqrt de cumul xp killer
-data[, ":=" (cumul_xp_killer_sqrt = sqrt(cumul_xp_killer))]
-
 
 
 # Standardise the variables (Z-scores) -------------------------------------
@@ -85,6 +80,7 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
   gaussian()
 
 
+
 # ==========================================================================
 # ==========================================================================
 
@@ -105,8 +101,8 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 #Modele complet
 modele_guard_xp = brm(formula = form_guard,
                   warmup = 500,
-                  iter = 1500,
-                  thin = 4,
+                  iter =2500,
+                  thin = 8,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",

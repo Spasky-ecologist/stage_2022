@@ -1,6 +1,5 @@
 #Model diagnostic script for guard-time_xp.R
 #Author : Patrice Leveille
-#Date : September 23 2022
 
 
 # =======================================================================

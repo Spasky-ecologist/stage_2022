@@ -420,6 +420,13 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
       form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
                          sigma ~ 1 + Zcumul_xp_killer) +
           gaussian()
+      
+      
+      
+      #Formule pour avoir un pente pour chaque joueur
+      form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
+                               sigma ~ 1 + Zcumul_xp_killer) +
+        gaussian()
     
       #Modele brm plus complet
       fit_guard <- brm(formula = form_guard,
