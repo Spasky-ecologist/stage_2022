@@ -26,7 +26,7 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "predator_id", "guard_time_total", "cumul_xp_killer", ))
+              select = c("match_encode_id", "predator_id", "guard_time_total", "cumul_xp_killer"))
 
 data <- unique(data)
 
@@ -116,8 +116,8 @@ priors <- c(
 #Modele complet
 modele_guard_xp <- brm(formula = form_guard,
                   warmup = 500,
-                  iter = 1500,
-                  thin = 4,
+                  iter = 2500,
+                  thin = 8,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
