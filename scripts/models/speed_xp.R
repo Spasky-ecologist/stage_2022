@@ -1,4 +1,4 @@
-#Script test pour 1e envoi Cedar - Patrice Leveille
+#Model script for movement speed as a function of predator experience - Patrice Leveille
 
 # Detect number of cores
 options(mc.cores = parallel::detectCores())
@@ -21,14 +21,14 @@ library(parallel)
 # Import the data ----------------------------------------------------------
 
 # Folder path Compute Canada
-folder = file.path("/home", "ab991036", "projects", "def-monti", 
+folder <- file.path("/home", "ab991036", "projects", "def-monti", 
                     "ab991036", "stage_2022", "data")
 
 # Import the data
-data = fread(file.path(folder, "02_final-data.csv"),
-              select = c("predator_id", "guard_time_total", "cumul_xp_killer"))
+data <- fread(file.path(folder, "02_final-data.csv"),
+              select = c("match_encode_id", "predator_id", "pred_speed", "cumul_xp_killer"))
 
-
+data <- unique(data)
 
 # ==========================================================================
 # ==========================================================================
@@ -46,11 +46,6 @@ data = fread(file.path(folder, "02_final-data.csv"),
 # Transform ----------------------------------------------------------------
 
 
-#Ajouter colonne pour le sqrt de cumul xp killer
-data[, ":=" (cumul_xp_killer_sqrt = sqrt(cumul_xp_killer))]
-
-
-
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Fonction pour standardiser
@@ -60,7 +55,7 @@ standardize = function (x) {(x - mean(x, na.rm = TRUE)) /
 #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
 data[, c("Zcumul_xp_killer") :=
               lapply(.SD, standardize), 
-            .SDcols = 3]
+            .SDcols = 4]
 
 # ==========================================================================
 # ==========================================================================
@@ -80,10 +75,24 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
+form_speed = brmsformula(pred_speed ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
                          sigma ~ 1 + Zcumul_xp_killer) +
   gaussian()
 
+
+# priors ----------------------------------------------------------------
+
+priors <- c(
+  # priors on fixed effects
+  set_prior("normal(0, 2)",
+            class = "b"),
+  # prior on the intercept
+  set_prior("normal(0, 2)",
+            class = "Intercept"),
+  # priors on variance parameters
+  set_prior("normal(0, 1)",
+            class = "sd")
+)
 
 # ==========================================================================
 # ==========================================================================
@@ -103,31 +112,33 @@ form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator
 
 
 #Modele complet
-modele_guard_xp = brm(formula = form_guard,
-                  warmup = 500,
-                  iter = 1500,
-                  thin = 4,
-                  chains = 4, 
-                  threads = threading(12),
-                  backend = "cmdstanr",
-                  seed = 123,
-                  control = list(adapt_delta = 0.95),
-                  save_pars = save_pars(all = TRUE),
-                  data = data)
+modele_speed_xp <- brm(formula = form_speed,
+                       warmup = 500,
+                       iter = 3500,
+                       thin = 10,
+                       chains = 4, 
+                       threads = threading(12),
+                       backend = "cmdstanr",
+                       seed = 123,
+                       prior = priors,
+                       control = list(adapt_delta = 0.95),
+                       save_pars = save_pars(all = TRUE),
+                       sample_prior = TRUE,
+                       data = data)
 
 
 
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_guard_xp, file = "guard_time_xp_base_model.rds")
+saveRDS(modele_speed_xp, file = "speed_xp_base_model.rds")
 
 
 
 # Capture the session ------------------------------------------------------
 
 session = sessionInfo()
-capture.output(session, file = "session-guard_time-models.txt")
+capture.output(session, file = "session-speed-models.txt")
 
 # ==========================================================================
 # ==========================================================================
