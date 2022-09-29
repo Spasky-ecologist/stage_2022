@@ -113,8 +113,8 @@ priors <- c(
 
 #Modele complet
 modele_speed_xp <- brm(formula = form_speed,
-                       warmup = 500,
-                       iter = 5500,
+                       warmup = 700,
+                       iter = 7500,
                        thin = 15,
                        chains = 4, 
                        threads = threading(12),
