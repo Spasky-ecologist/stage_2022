@@ -1,4 +1,4 @@
-#Model diagnostic script for speed_xp.R
+#Model diagnostic script for chase-time_xp.R
 #Author : Patrice Leveille
 
 
@@ -28,7 +28,7 @@ library(ggpubr)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/speed_xp_base_model.rds")
+model <- readRDS("outputs/R_objects/chase_time_xp_base_model.rds")
 
 # =======================================================================
 # =======================================================================
@@ -106,15 +106,15 @@ param_plot <- brms::pp_check(model,
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic1.png",
+         filename = "./outputs/model_diagnostics/CT_xp_diagnostic1.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic2.png",
+         filename = "./outputs/model_diagnostics/CT_xp_diagnostic2.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic3.png",
+         filename = "./outputs/model_diagnostics/CT_xp_diagnostic3.png",
          width = 1500, height = 1500, res = 300)
 
 
