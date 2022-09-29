@@ -116,8 +116,8 @@ priors <- c(
 #Modele complet
 modele_guard_xp <- brm(formula = form_guard,
                   warmup = 500,
-                  iter = 2500,
-                  thin = 8,
+                  iter = 3500,
+                  thin = 10,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
