@@ -140,7 +140,7 @@ saveRDS(modele_guard_xp, file = "chase_time_xp_base_model.rds")
 # Capture the session ------------------------------------------------------
 
 session <- sessionInfo()
-capture.output(session, file = "session-guard_time-models.txt")
+capture.output(session, file = "session-chase_time-models.txt")
 
 # ==========================================================================
 # ==========================================================================
