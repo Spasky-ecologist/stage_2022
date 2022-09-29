@@ -133,7 +133,7 @@ modele_chase_xp <- brm(formula = form_chase,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_guard_xp, file = "chase_time_xp_base_model.rds")
+saveRDS(modele_chase_xp, file = "chase_time_xp_base_model.rds")
 
 
 
