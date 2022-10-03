@@ -33,7 +33,11 @@ donnees_unique = unique(donnees_small)
 
 #Transformer en datatable pour mettre les colonnes
 is.data.table(donnees_unique)
-setDT(donnees_unique) 
+setDT(donnees_unique)
+
+
+#Enlever les faux 0 de guard_time
+donnees_unique <- donnees_unique[!(hunting_success>0 & guard_time_total == 0)]
 
 #Ajouter une colonne au tableau unique pour le niveau d'expertise
 donnees_unique[cumul_xp_killer <= 100, expertise := "novice"]
