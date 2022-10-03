@@ -139,8 +139,8 @@ xp_390_420_subset <- xp_390_420[1:50, ]
 
 
 #Creer un tableau avec 50 lignes des xp entre 360 et 390 (les 50 1e lignes)
-xp_360_390 = subset(donnees_select, donnees_select$cumul_xp_killer >= 360 & donnees_select$cumul_xp_killer < 390)
-xp_360_390_subset = xp_360_390[1:50, ]
+xp_360_390 <- subset(donnees_select, donnees_select$cumul_xp_killer >= 360 & donnees_select$cumul_xp_killer < 390)
+xp_360_390_subset <- xp_360_390[1:50, ]
 
 
 
