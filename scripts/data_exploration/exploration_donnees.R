@@ -394,6 +394,12 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
            lapply(.SD, standardize), 
          .SDcols = 15]
     
+      
+      
+      
+      #Find (columns that contain specific string)
+      test <- select(posterior_fit,contains("sigma"))
+      
     
 
   #Graphiques de la vitesse et temps a garder selon l'experience
