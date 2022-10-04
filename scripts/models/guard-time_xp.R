@@ -91,13 +91,13 @@ form_guard <- brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predato
 # priors ----------------------------------------------------------------
 
 priors <- c(
-  # priors on fixed effects
+  # priors on fixed effects (experience)
   set_prior("normal(0, 2)",
             class = "b"),
-  # prior on the intercept
+  # prior on the intercept (guard time)
   set_prior("normal(0, 2)",
             class = "Intercept"),
-  # priors on variance parameters
+  # priors on variance parameters (predator id ?)
   set_prior("normal(0, 1)",
             class = "sd")
 )
