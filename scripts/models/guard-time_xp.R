@@ -31,10 +31,7 @@ data <- fread(file.path(folder, "02_final-data.csv"),
 data <- unique(data)
 
 #Remove false zeros in guarding time for a hunting success > 0
-is.data.table(data)
-setDT(data)
-
-data <- data[!(hunting_success>0 & guard_time_total == 0)]
+data <- data[!(hunting_success > 0 & guard_time_total == 0)]
 
 
 # ==========================================================================
