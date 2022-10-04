@@ -26,9 +26,16 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "predator_id", "guard_time_total", "cumul_xp_killer"))
+              select = c("match_encode_id", "hunting_success", "predator_id", "guard_time_total", "cumul_xp_killer"))
 
 data <- unique(data)
+
+#Remove false zeros in guarding time for a hunting success > 0
+is.data.table(data)
+setDT(data)
+
+data <- data[!(hunting_success>0 & guard_time_total == 0)]
+
 
 # ==========================================================================
 # ==========================================================================
@@ -55,7 +62,7 @@ standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
               lapply(.SD, standardize),
-            .SDcols = 4]
+            .SDcols = 5]
 
 # ==========================================================================
 # ==========================================================================
