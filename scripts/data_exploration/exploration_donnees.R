@@ -23,7 +23,7 @@ donnees_select <- select(donnees, match_encode_id, game_mode, environment_id, pr
                         prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
 #Selectionner les colonnes d'interets mais moins pour faire un tableau des predateur unique
-donnees_small <- select(donnees, environment_id, predator_id, pred_game_duration, total_chase_duration, avg_chase_duration, 
+donnees_small <- select(donnees, match_encode_id, environment_id, predator_id, pred_game_duration, total_chase_duration, avg_chase_duration, 
                        pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total, latency_1st_capture, 
                        prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
@@ -392,7 +392,7 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
       #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
       data_expert[, c("Zcumul_xp_killer") :=
            lapply(.SD, standardize), 
-         .SDcols = 16]
+         .SDcols = 15]
     
     
 
