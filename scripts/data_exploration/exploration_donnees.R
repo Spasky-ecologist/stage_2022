@@ -437,18 +437,40 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
       form_guard_pente = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
                                      sigma ~ 1 + Zcumul_xp_killer) +
         gaussian()
+      
+      
+      #Formula to have the strength of the relation for each player (hurdle)
+      form_guard_slope = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
+                                     hu ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id)) +
+        hurdle_lognormal()
+      
+      
+      # priors
+      
+      priors <- c(
+        # priors on fixed effects (experience)
+        set_prior("normal(0, 2)",
+                  class = "b"),
+        # prior on the intercept (guard time)
+        set_prior("normal(0, 2)",
+                  class = "Intercept"),
+        # priors on variance parameters (predator id ?)
+        set_prior("normal(0, 1)",
+                  class = "sd")
+      )
+      
     
       #Modele brm plus complet
-      fit_guard <- brm(formula = form_guard,
-                  prior = NULL,
+      fit_guard <- brm(formula = form_guard_slope,
                   iter = 1500,
                   warmup = 500,
                   thin = 4,
                   chains = 4,
                   seed = 123,
-                  control = list(adapt_delta = 0.99),
+                  prior = priors,
+                  control = list(adapt_delta = 0.95),
                   save_pars = save_pars(all = TRUE),
-                  sample_prior = FALSE,
+                  sample_prior = TRUE,
                   data = data_expert)
     
     
