@@ -25,6 +25,7 @@ library(data.table)
 library(brms)
 library(bayesplot)
 library(ggpubr)
+library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
@@ -64,24 +65,133 @@ bayesplot_grid(pp_check(model, ndraws = 100))
 summary(model)
 
 
-#Mettre les residus du modele dans un variable
-residus = resid(model)
+# Plot prior and posterior draws ---------------------------------------------------
+
+prior_summary(model)
+
+# Intercept
+ggplot(posterior_fit) +
+  geom_density(aes(prior_Intercept),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  geom_density(aes(Intercept),
+               fill = "#FC4E07",
+               color = "black",
+               alpha = 0.6) + 
+  theme_classic()
 
 
-# Verifier la normalite des residus
-hist(residus, xlab = "Résidus", ylab = "Nombre d’observations", 
-     main = '', col = 'darkgray', cex.lab = 1.5)
+# Cumul xp
+ggplot(posterior_fit) +
+  geom_density(aes(prior_b),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  geom_density(aes(b_Zcumul_xp_killer),
+               fill = "#FC4E07",
+               color = "black",
+               alpha = 0.6) + 
+  theme_classic()
+
+
+# Standard deviation of predator ID
+ggplot(posterior_fit) +
+  geom_density(aes(prior_sd_predator_id),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  #geom_density(aes(sds_spredator_id_1),
+  #            fill = "#FC4E07",
+  #           color = "black",
+  #          alpha = 0.6) + 
+  theme_classic()
 
 
 
-#QQplot de normalite pour les residus du modele
-qqnorm(resid(model))
-qqline(resid(model))
 
 
-# Homogénéité des résidus
-plot(resid(model) ~ fitted(model), ylab = "Résidus", xlab = "Valeurs prédites")
-abline(h = 0, lty = 2, col = "red")
+
+
+
+# Setup a custom theme for the plot ----------------------------------------
+
+custom_theme <- theme(# axis values size
+  axis.text.x = element_text(face = "plain", 
+                             size = 15,
+                             color = "black"),
+  axis.text.y = element_text(face = "plain", 
+                             size = 15,
+                             color = "black"),
+  # axis ticks lenght
+  axis.ticks.length = unit(.15, "cm"),
+  # axis ticks width
+  axis.ticks = element_line(size = 0.90, 
+                            color = "black"),
+  # axis titles size
+  axis.title = element_text(size = 17, 
+                            face = "plain",
+                            color = "black"),
+  axis.line = element_line(size = 0.95,
+                           color = "black"),
+  legend.position = "none",
+  panel.grid = element_blank(),
+  panel.background = element_blank())
+
+# ==========================================================================
+# ==========================================================================
+
+
+
+
+
+# ==========================================================================
+# 2. Plot 1 : GAMM fitted line
+# ==========================================================================
+
+
+
+# Prepare the plot ---------------------------------------------------------
+
+# With intercept using built-in function
+fig1 <- conditional_effects(model, method = "fitted", robust = FALSE)
+
+# Extract values in a table
+tab <- fig1$Zcumul_xp_killer
+
+# Transform as data.table
+tab <- data.table(tab)
+
+# Back transform x-axis values
+sequence <- (seq(0, 500, 100) - mean(donnees_unique$cumul_xp_killer))
+standev <- sd(donnees_unique$cumul_xp_killer)
+scaled_breaks <- sequence / standev
+
+
+
+# Produce the plot --------------------------------------------------------
+
+glmm_plot <- ggplot(tab,
+                    aes(x = Zcumul_xp_killer,
+                        y = estimate__)) +
+  geom_ribbon(aes(x = Zcumul_xp_killer,
+                  ymin = lower__,
+                  ymax = upper__),
+              alpha = 0.5,
+              fill = "gray") +
+  geom_line(#linetype = "dashed",
+    size = 1,
+    color = "black") +
+  ylab("Guarding time\n") +
+  scale_y_continuous(breaks = seq(0, 4, 1),
+                     limits = c(0, 4)) +
+  scale_x_continuous(breaks = scaled_breaks,
+                     labels = seq(0, 500, 100)) +
+  xlab("\nCumulative experience") +
+  custom_theme
+
+# ==========================================================================
+# ==========================================================================
 
 
 
