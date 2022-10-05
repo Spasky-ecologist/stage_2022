@@ -64,24 +64,48 @@ bayesplot_grid(pp_check(model, ndraws = 100))
 summary(model)
 
 
-#Mettre les residus du modele dans un variable
-residus = resid(model)
+
+# Plot prior and posterior draws ---------------------------------------------------
+
+prior_summary(model)
+
+# Intercept
+ggplot(posterior_fit) +
+  geom_density(aes(prior_Intercept),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  geom_density(aes(Intercept),
+               fill = "#FC4E07",
+               color = "black",
+               alpha = 0.6) + 
+  theme_classic()
 
 
-# Verifier la normalite des residus
-hist(residus, xlab = "Résidus", ylab = "Nombre d’observations", 
-     main = '', col = 'darkgray', cex.lab = 1.5)
+# Cumul xp
+ggplot(posterior_fit) +
+  geom_density(aes(prior_b),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  geom_density(aes(b_Zcumul_xp_killer),
+               fill = "#FC4E07",
+               color = "black",
+               alpha = 0.6) + 
+  theme_classic()
 
 
-
-#QQplot de normalite pour les residus du modele
-qqnorm(resid(model))
-qqline(resid(model))
-
-
-# Homogénéité des résidus
-plot(resid(model) ~ fitted(model), ylab = "Résidus", xlab = "Valeurs prédites")
-abline(h = 0, lty = 2, col = "red")
+# Standard deviation of predator ID
+ggplot(posterior_fit) +
+  geom_density(aes(prior_sd_predator_id),
+               fill = "steelblue",
+               color = "black",
+               alpha = 0.6) +
+  #geom_density(aes(sds_spredator_id_1),
+  #            fill = "#FC4E07",
+  #           color = "black",
+  #          alpha = 0.6) + 
+  theme_classic()
 
 
 
