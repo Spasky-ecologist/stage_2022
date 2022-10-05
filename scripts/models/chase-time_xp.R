@@ -75,8 +75,8 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_chase <- brmsformula(avg_chase_duration ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
-                         sigma ~ 1 + Zcumul_xp_killer) +
+form_chase <- brmsformula(avg_chase_duration ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
+                         sigma ~ 1 + Zcumul_xp_killer+ (1 | predator_id)) + 
   gaussian()
 
 
