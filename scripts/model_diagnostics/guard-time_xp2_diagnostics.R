@@ -58,6 +58,7 @@ plot(model)
 
 #Model relation plot
 plot(conditional_effects(model))
+plot(conditional_effects(model, dpar = "hu"))
 
 
 #La moyenne de l'echantillon (noir) vs les moyennes des sims
@@ -73,6 +74,8 @@ summary(model)
 
 
 # Plot prior and posterior draws ---------------------------------------------------
+
+prior_summary(model)
 
 # Intercept
 ggplot(posterior_fit) +
