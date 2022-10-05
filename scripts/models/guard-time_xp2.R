@@ -81,7 +81,7 @@ data[, c("Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_slope = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
+form_guard_slope = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
                                sigma ~ 1 + Zcumul_xp_killer) + 
   zero_inflated_poisson()
     
