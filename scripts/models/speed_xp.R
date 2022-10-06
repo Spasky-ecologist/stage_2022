@@ -75,7 +75,7 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed = brmsformula(pred_speed ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
+form_speed = brmsformula(pred_speed ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
                          sigma ~ 1 + Zcumul_xp_killer) +
   gaussian()
 
