@@ -30,6 +30,13 @@ library(ggpubr)
 
 model <- readRDS("outputs/R_objects/speed_xp_base_model.rds")
 
+
+# Prepare model draws --------------------------------------------------------------
+
+
+# Extract posterior draws
+posterior_fit <- as_draws_df(model)
+
 # =======================================================================
 # =======================================================================
 
@@ -157,7 +164,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_glmm.png",
+         filename = "./outputs/model_diagnostics/SP_xp_glmm_slope.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
