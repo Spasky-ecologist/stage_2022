@@ -110,6 +110,60 @@ ggplot(posterior_fit) +
 
 
 
+# ==========================================================================
+# 2. Plot 1 : GAMM fitted line
+# ==========================================================================
+
+
+
+# Prepare the plot ---------------------------------------------------------
+
+# With intercept using built-in function
+fig1 <- conditional_effects(model, method = "fitted", robust = FALSE)
+
+# Extract values in a table
+tab <- fig1$Zcumul_xp_killer
+
+# Transform as data.table
+tab <- data.table(tab)
+
+# Back transform x-axis values
+sequence <- (seq(0, 500, 100) - mean(donnees_unique$cumul_xp_killer))
+standev <- sd(donnees_unique$cumul_xp_killer)
+scaled_breaks <- sequence / standev
+
+
+
+# Produce the plot --------------------------------------------------------
+
+glmm_plot <- ggplot(tab,
+                    aes(x = Zcumul_xp_killer,
+                        y = estimate__)) +
+  geom_ribbon(aes(x = Zcumul_xp_killer,
+                  ymin = lower__,
+                  ymax = upper__),
+              alpha = 0.5,
+              fill = "gray") +
+  geom_line(#linetype = "dashed",
+    size = 1,
+    color = "black") +
+  ylab("Movement speed\n") +
+  scale_y_continuous(breaks = seq(0, 4, 1),
+                     limits = c(0, 4)) +
+  scale_x_continuous(breaks = scaled_breaks,
+                     labels = seq(0, 500, 100)) +
+  xlab("\nCumulative experience") +
+  custom_theme
+
+#Save the plot image
+ggexport(glmm_plot,
+         filename = "./outputs/model_diagnostics/SP_xp_glmm.png",
+         width = 1500, height = 1500, res = 300)
+
+# ==========================================================================
+# ==========================================================================
+
+
 # Predictions diagnostics -----------------------------------------------
 
 # Observed y outcomes vs posterior predicted outcomes
@@ -130,15 +184,15 @@ param_plot <- brms::pp_check(model,
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic1.png",
+         filename = "./outputs/model_diagnostics/SP_xp_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic2.png",
+         filename = "./outputs/model_diagnostics/SP_xp_error_scatter.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_diagnostic3.png",
+         filename = "./outputs/model_diagnostics/SP_xp_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
