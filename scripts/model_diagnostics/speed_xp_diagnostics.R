@@ -117,6 +117,39 @@ ggplot(posterior_fit) +
 
 
 
+# Setup a custom theme for the plot ----------------------------------------
+
+custom_theme <- theme(# axis values size
+  axis.text.x = element_text(face = "plain", 
+                             size = 15,
+                             color = "black"),
+  axis.text.y = element_text(face = "plain", 
+                             size = 15,
+                             color = "black"),
+  # axis ticks lenght
+  axis.ticks.length = unit(.15, "cm"),
+  # axis ticks width
+  axis.ticks = element_line(size = 0.90, 
+                            color = "black"),
+  # axis titles size
+  axis.title = element_text(size = 17, 
+                            face = "plain",
+                            color = "black"),
+  axis.line = element_line(size = 0.95,
+                           color = "black"),
+  legend.position = "none",
+  panel.grid = element_blank(),
+  panel.background = element_blank())
+
+
+# ==========================================================================
+# ==========================================================================
+
+
+
+
+
+
 # ==========================================================================
 # 2. Plot 1 : GAMM fitted line
 # ==========================================================================
@@ -191,7 +224,7 @@ param_plot <- brms::pp_check(model,
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_outcomes.png",
+         filename = "./outputs/model_diagnostics/SP_xp_outcomes_slope.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
@@ -199,7 +232,7 @@ ggexport(error_plot,
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_mean.png",
+         filename = "./outputs/model_diagnostics/SP_xp_mean_slope.png",
          width = 1500, height = 1500, res = 300)
 
 
