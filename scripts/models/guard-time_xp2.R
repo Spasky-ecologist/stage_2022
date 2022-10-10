@@ -123,7 +123,7 @@ priors <- c(
 modele_guard_xp2 <- brm(formula = form_guard_slope,
                   warmup = 500,
                   iter = 3500,
-                  thin = 10,
+                  thin = 12,
                   chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",

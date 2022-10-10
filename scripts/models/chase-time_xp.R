@@ -117,7 +117,7 @@ priors <- c(
 modele_chase_xp <- brm(formula = form_chase,
                   warmup = 500,
                   iter = 3500,
-                  thin = 10,
+                  thin = 12,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
