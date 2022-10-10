@@ -29,7 +29,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/guard_time_xp_base_model2.rds")
+model <- readRDS("outputs/R_objects/guard_time_xp_base_model_hu_ctrl.rds")
 
 
 # Prepare model draws --------------------------------------------------------------
@@ -201,7 +201,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_glmm_2.png",
+         filename = "./outputs/model_diagnostics/GT_xp_glmm_hu_ctrl.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
