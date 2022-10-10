@@ -62,7 +62,7 @@ plot(conditional_effects(model, dpar = "hu"))
 
 
 #La moyenne de l'echantillon (noir) vs les moyennes des sims
-bayesplot_grid(pp_check(model, type = 'stat', stat = mean))
+bayesplot_grid(pp_check(model, type = 'stat', stat = "mean"))
 
 
 #Distribution de notre echantillon vs les sims
@@ -201,7 +201,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_glmm.png",
+         filename = "./outputs/model_diagnostics/GT_xp_glmm_2.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
