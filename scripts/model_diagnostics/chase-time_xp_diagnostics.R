@@ -183,10 +183,10 @@ glmm_plot <- ggplot(tab,
     size = 1,
     color = "black") +
   ylab("Chase time\n") +
-  scale_y_continuous(breaks = seq(0, 4, 1),
-                     limits = c(0, 4)) +
-  scale_x_continuous(breaks = scaled_breaks,
-                     labels = seq(0, 500, 100)) +
+  #scale_y_continuous(breaks = seq(0, 4, 1),
+  #                   limits = c(0, 4)) +
+  #scale_x_continuous(breaks = scaled_breaks,
+  #                   labels = seq(0, 500, 100)) +
   xlab("\nCumulative experience") +
   custom_theme
 
