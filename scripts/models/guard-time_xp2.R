@@ -26,7 +26,8 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "hunting_success", "predator_id", "guard_time_total", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "hunting_success",
+                         "predator_id", "guard_time_total", "cumul_xp_killer"))
 
 data <- unique(data)
 
@@ -56,10 +57,16 @@ data <- data[!(hunting_success > 0 & guard_time_total == 0)]
 standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
+#Use standardisation formula on game duration and add a new column
+data[, c("Zpred_game_duration") :=
+              lapply(.SD, standardize),
+            .SDcols = 2]
+
+
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
-              lapply(.SD, standardize),
-            .SDcols = 5]
+       lapply(.SD, standardize),
+     .SDcols = 6]
 
 # ==========================================================================
 # ==========================================================================
@@ -81,9 +88,12 @@ data[, c("Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_slope = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
-                               hu ~ 1 + Zcumul_xp_killer + (1 | predator_id)) +
-  hurdle_lognormal()
+form_guard_slope = brmsformula(guard_time_total ~ 1 +
+                                Zcumul_xp_killer +
+                                Zpred_game_duration +
+                                (1 + Zcumul_xp_killer | predator_id), 
+                                hu ~ 1 + Zcumul_xp_killer + Zpred_game_duration + (1 | predator_id)) +
+                      hurdle_lognormal()
 
   
 
@@ -121,8 +131,8 @@ priors <- c(
 
 #Modele complet
 modele_guard_xp2 <- brm(formula = form_guard_slope,
-                  warmup = 500,
-                  iter = 3500,
+                  warmup = 700,
+                  iter = 5000,
                   thin = 12,
                   chains = 4,
                   threads = threading(12),
