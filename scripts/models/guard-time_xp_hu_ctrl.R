@@ -1,4 +1,6 @@
-#Model script for guard time as a function of predator experience - Patrice Leveille
+#Model script for guard time as a function of predator experience 
+#Hurdle model with game duration control
+#Patrice Leveille
 
 # Detect number of cores
 options(mc.cores = parallel::detectCores())
@@ -88,7 +90,7 @@ data[, c("Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_slope = brmsformula(guard_time_total ~ 1 +
+form_guard_hu_ctrl = brmsformula(guard_time_total ~ 1 +
                                 Zcumul_xp_killer +
                                 Zpred_game_duration +
                                 (1 + Zcumul_xp_killer | predator_id), 
@@ -130,7 +132,7 @@ priors <- c(
 # Model specifications -----------------------------------------------------
 
 #Modele complet
-modele_guard_xp2 <- brm(formula = form_guard_slope,
+modele_guard_xp_hu_ctrl <- brm(formula = form_guard_hu_ctrl,
                   warmup = 700,
                   iter = 5000,
                   thin = 12,
@@ -149,7 +151,7 @@ modele_guard_xp2 <- brm(formula = form_guard_slope,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_guard_xp2, file = "guard_time_xp_base_model2.rds")
+saveRDS(modele_guard_xp_hu_ctrl, file = "guard_time_xp_base_model_hu_ctrl.rds")
 
 
 
