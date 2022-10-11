@@ -26,12 +26,13 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "hunting_success", "predator_id", "guard_time_total", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "latency_1st_capture",
+                         "predator_id", "guard_time_total", "cumul_xp_killer"))
 
 data <- unique(data)
 
-#Remove false zeros in guarding time for a hunting success > 0
-data <- data[!(hunting_success > 0 & guard_time_total == 0)]
+#Remove zeros in guarding time for matches with no capture (guarding is theorically NA and not 0)
+data <- data[!(guard_time_total == 0 & latency_1st_capture == "NaN")]
 
 
 # ==========================================================================
@@ -53,13 +54,21 @@ data <- data[!(hunting_success > 0 & guard_time_total == 0)]
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Standardisation function
-standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
-    sd(x, na.rm = TRUE)}
+standardize <- function(x) {
+  (x - mean(x, na.rm = TRUE)) /
+    sd(x, na.rm = TRUE)
+  }
+
+
+#Use standardisation formula on game duration and add a new column
+data[, c("Zpred_game_duration") :=
+       lapply(.SD, standardize),
+     .SDcols = 2]
 
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
               lapply(.SD, standardize),
-            .SDcols = 5]
+            .SDcols = 6]
 
 # ==========================================================================
 # ==========================================================================
@@ -79,9 +88,12 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_guard <- brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id),
-                         sigma ~ 1 + Zcumul_xp_killer) +
-  gaussian()
+form_guard <- brmsformula(guard_time_total ~ 1 +
+                            Zcumul_xp_killer +
+                            Zpred_game_duration +
+                            (1 + Zcumul_xp_killer | predator_id), 
+                            sigma ~ 1 + Zcumul_xp_killer + Zpred_game_duration + (1 | predator_id)) +
+                  gaussian()
 
 
 
@@ -120,7 +132,7 @@ priors <- c(
 modele_guard_xp <- brm(formula = form_guard,
                   warmup = 500,
                   iter = 3500,
-                  thin = 10,
+                  thin = 12,
                   chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",
