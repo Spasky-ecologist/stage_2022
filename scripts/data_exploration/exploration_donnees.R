@@ -37,7 +37,13 @@ setDT(donnees_unique)
 
 
 #Enlever les faux 0 de guard_time
-donnees_unique <- donnees_unique[!(hunting_success>0 & guard_time_total == 0)]
+donnees_unique <- donnees_unique[!(hunting_success> 0 & guard_time_total == 0)]
+
+
+#Enlever les 0 guard time quand y'a eu aucune capture (pas eu l'opportunite de guard)
+donnees_unique <- donnees_unique[!(guard_time_total == 0 & latency_1st_capture == "NaN")]
+
+
 
 #Ajouter une colonne au tableau unique pour le niveau d'expertise
 donnees_unique[cumul_xp_killer <= 100, expertise := "novice"]
