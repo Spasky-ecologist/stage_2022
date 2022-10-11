@@ -1,0 +1,57 @@
+# ===========================================================================
+ 
+#				Metadata for :				                                            #
+#           L’apprentissage et la flexibilité du comportement             #
+#                     des prédateurs dans un jeu vidéo                    #
+
+# ===========================================================================
+
+Source : Behaviour Interactive
+License : 
+
+
+
+# ------------------------------------------------------
+# File name: final_data-02.csv
+# Number of columns: 44
+# Number of rows: 122 192
+# ------------------------------------------------------
+
+
+
+# Match information
+# -----------------------
+timestamp           (POSIXct) : the timestamp when the match was launched (yyyy:mm:dd hh:mm:ss)
+environment_id      (chr)     : the ID of the game environment where the match was played
+hunting_success     (integer) : number of prey killed by the player in the match
+pred_game_duration  (num)     : the match duration (seconds)
+
+
+
+# Player experience
+# -----------------------
+total_xp_killer     (integer) : The number of matches played by the player for the whole period
+cumul_xp_killer     (integer) : The cumulative amount of matches played prior to a specific match
+
+
+# Columns 11 to 21
+# Player behaviors
+# -----------------------
+
+# Predator behavior
+pred_speed              	   (num) : predator average travel speed (m/s)
+space_covered_rate           (num) : the amount of tiles visited over the match duration (tile/s)
+hook_start_time		     (num) : time elapsed before the 1st prey was captured (seconds)
+prox_mid_PreyGuarding        (num) : time spent guarding a captured prey (0-9 meters from capture site)
+DamageGenerator              (num) : the amount of times the predator damaged a generator
+n_chases		                 (num) : the amount of times the predator chased a prey
+hits                         (num) : the amount of normal attacks made by the predator
+pallets_destroyed            (num) : the amount of pallets dropped by prey that the predator destroyed
+closet_open                  (num) : the amount of times the predator opened a locker
+
+# Prey behavior
+prey_avg_speed               (num) : the average travel speed of the four prey (m/s)
+prey_avg_space_covered_rate  (num) : the average amount of tiles visited of the four prey over the match duration (tile/s)
+
+# ------------------------------------------------------
+# ------------------------------------------------------

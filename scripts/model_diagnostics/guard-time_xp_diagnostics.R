@@ -61,7 +61,7 @@ plot(conditional_effects(model))
 
 
 #La moyenne de l'echantillon (noir) vs les moyennes des sims
-bayesplot_grid(pp_check(model, type = 'stat', stat = mean))
+bayesplot_grid(pp_check(model, type = 'stat', stat = "mean"))
 
 
 #Distribution de notre echantillon vs les sims
