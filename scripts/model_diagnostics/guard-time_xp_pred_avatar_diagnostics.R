@@ -194,7 +194,7 @@ glmm_plot <- ggplot(tab,
   #                   limits = c(0, 4)) +
   #scale_x_continuous(breaks = scaled_breaks,
   #                   labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience") +
+  xlab("\nCumulative experience (Z score)") +
   custom_theme
 
 
@@ -224,12 +224,11 @@ error_plot <- brms::pp_check(model,
 # Parameter value around posterior distribution
 param_plot <- brms::pp_check(model,
                              type = 'stat',
-                             stat = 'mean',
-                             ndraws = 100)
+                             stat = 'mean')
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_diagnostic1.png",
+         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
@@ -237,7 +236,7 @@ ggexport(error_plot,
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_diagnostic3.png",
+         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
