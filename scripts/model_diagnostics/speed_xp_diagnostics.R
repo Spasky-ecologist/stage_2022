@@ -56,7 +56,7 @@ plot(model)
 
 
 #Model relation plot
-plot(conditional_effects(model), points = TRUE) 
+plot(conditional_effects(model), points = TRUE)
 
 
 #La moyenne de l'echantillon (noir) vs les moyennes des sims
