@@ -26,8 +26,8 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "hunting_success",
-                         "predator_id", "guard_time_total", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "latency_1st_capture",
+                         "predator_id", "predator_avatar_id", "guard_time_total", "cumul_xp_killer"))
 
 data <- unique(data)
 
@@ -66,7 +66,7 @@ data[, c("Zpred_game_duration") :=
 #Use standardisation formula on predator experience and add a new column
 data[, c("Zcumul_xp_killer") :=
        lapply(.SD, standardize),
-     .SDcols = 6]
+     .SDcols = 7]
 
 # ==========================================================================
 # ==========================================================================
@@ -88,12 +88,14 @@ data[, c("Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_ctrl = brmsformula(guard_time_total ~ 1 +
+form_guard_pred_avatar = brmsformula(guard_time_total ~ 1 +
                                 Zcumul_xp_killer +
                                 Zpred_game_duration +
+                                predator_avatar_id +
                                 (1 + Zcumul_xp_killer | predator_id), 
-                                sigma ~ 1 + Zcumul_xp_killer + Zpred_game_duration + (1 | predator_id)) +
-                      gaussian()
+                                  sigma ~ 1 + Zcumul_xp_killer + Zpred_game_duration +
+                                  predator_avatar_id + (1 | predator_id)) +
+                        gaussian()
 
   
 
@@ -130,7 +132,7 @@ priors <- c(
 # Model specifications -----------------------------------------------------
 
 #Modele complet
-modele_guard_xp_ctrl <- brm(formula = form_guard_ctrl,
+mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
                   warmup = 700,
                   iter = 5000,
                   thin = 12,
@@ -149,7 +151,7 @@ modele_guard_xp_ctrl <- brm(formula = form_guard_ctrl,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_guard_xp_ctrl, file = "guard_time_xp_base_model_ctrl.rds")
+saveRDS(mod_pred_avatar, file = "guard_time_xp_base_model_pred_avatar.rds")
 
 
 
