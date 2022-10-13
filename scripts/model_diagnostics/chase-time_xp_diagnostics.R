@@ -31,6 +31,15 @@ library(ggplot2)
 
 model <- readRDS("outputs/R_objects/chase_time_xp_base_model.rds")
 
+
+
+# Prepare model draws --------------------------------------------------------------
+
+
+# Extract posterior draws
+posterior_fit <- as_draws_df(model)
+
+
 # =======================================================================
 # =======================================================================
 
@@ -54,7 +63,7 @@ plot(conditional_effects(model))
 
 
 #La moyenne de l'echantillon (noir) vs les moyennes des sims
-bayesplot_grid(pp_check(model, type = 'stat', stat = mean))
+bayesplot_grid(pp_check(model, type = 'stat', stat = "mean"))
 
 
 #Distribution de notre echantillon vs les sims
@@ -183,18 +192,18 @@ glmm_plot <- ggplot(tab,
     size = 1,
     color = "black") +
   ylab("Chase time\n") +
-  #scale_y_continuous(breaks = seq(0, 4, 1),
-  #                   limits = c(0, 4)) +
+  #scale_y_continuous(breaks = seq(0, 100, 25),
+  #                   limits = c(0, 100)) +
   #scale_x_continuous(breaks = scaled_breaks,
   #                   labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience") +
+  xlab("\nCumulative experience (Z score") +
   custom_theme
 
 
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/model_diagnostics/CT_xp_glmm_slope.png",
+         filename = "./outputs/figures/CT_xp_glmm_slope.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
@@ -218,12 +227,11 @@ error_plot <- brms::pp_check(model,
 # Parameter value around posterior distribution
 param_plot <- brms::pp_check(model,
                              type = 'stat',
-                             stat = 'mean',
-                             ndraws = 100)
+                             stat = 'mean')
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/CT_xp_diagnostic1.png",
+         filename = "./outputs/model_diagnostics/CT_xp_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
@@ -231,7 +239,7 @@ ggexport(error_plot,
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/CT_xp_diagnostic3.png",
+         filename = "./outputs/model_diagnostics/CT_xp_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
