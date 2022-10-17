@@ -197,7 +197,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/model_diagnostics/SP_xp_glmm_slope.png",
+         filename = "./outputs/figures/SP_xp_glmm_pred_avatar.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
