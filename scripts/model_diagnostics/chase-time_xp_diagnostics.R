@@ -192,18 +192,18 @@ glmm_plot <- ggplot(tab,
     size = 1,
     color = "black") +
   ylab("Chase time\n") +
-  #scale_y_continuous(breaks = seq(0, 100, 25),
-  #                   limits = c(0, 100)) +
-  #scale_x_continuous(breaks = scaled_breaks,
-  #                   labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience (Z score") +
+  scale_y_continuous(breaks = seq(0, 100, 25),
+                     limits = c(0, 100)) +
+  scale_x_continuous(breaks = scaled_breaks,
+                     labels = seq(0, 500, 100)) +
+  xlab("\nCumulative experience") +
   custom_theme
 
 
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/CT_xp_glmm_slope.png",
+         filename = "./outputs/figures/CT_xp_glmm_scaled.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
