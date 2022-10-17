@@ -29,7 +29,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/chase_time_xp_base_model.rds")
+model <- readRDS("outputs/R_objects/chase_time_xp_base_model_pred_avatar.rds")
 
 
 
@@ -192,18 +192,18 @@ glmm_plot <- ggplot(tab,
     size = 1,
     color = "black") +
   ylab("Chase time\n") +
-  scale_y_continuous(breaks = seq(0, 100, 25),
-                     limits = c(0, 100)) +
-  scale_x_continuous(breaks = scaled_breaks,
-                     labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience") +
+  #scale_y_continuous(breaks = seq(0, 100, 25),
+  #                   limits = c(0, 100)) +
+  #scale_x_continuous(breaks = scaled_breaks,
+  #                   labels = seq(0, 500, 100)) +
+  xlab("\nCumulative experience (Z score)") +
   custom_theme
 
 
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/CT_xp_glmm_scaled.png",
+         filename = "./outputs/figures/CT_xp_glmm_pred_avatar.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
@@ -231,7 +231,7 @@ param_plot <- brms::pp_check(model,
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/CT_xp_outcomes.png",
+         filename = "./outputs/model_diagnostics/CT_xp_pred_avatar_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
@@ -239,7 +239,7 @@ ggexport(error_plot,
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/CT_xp_mean.png",
+         filename = "./outputs/model_diagnostics/CT_xp_pred_avatar_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
