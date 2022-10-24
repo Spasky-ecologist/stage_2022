@@ -152,7 +152,7 @@ mod_pred_avatar_2 <- brm(formula = form_guard_pred_avatar_2,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(mod_pred_avatar, file = "guard_time_xp_base_model_pred_avatar_2.rds")
+saveRDS(mod_pred_avatar_2, file = "guard_time_xp_base_model_pred_avatar_2.rds")
 
 
 
