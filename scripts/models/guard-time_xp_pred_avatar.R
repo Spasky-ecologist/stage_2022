@@ -50,6 +50,7 @@ data <- data[!(guard_time_total == 0 & latency_1st_capture == "NaN")]
 
 # Transform ----------------------------------------------------------------
 
+data[, ":=" (guard_time_total_sqrt = sqrt(guard_time_total))]
 
 # Standardise the variables (Z-scores) -------------------------------------
 
@@ -58,15 +59,16 @@ standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
 #Use standardisation formula on game duration and add a new column
-data[, c("Zpred_game_duration") :=
+data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
               lapply(.SD, standardize),
-            .SDcols = 2]
+            .SDcols = 2, 7]
 
 
 #Use standardisation formula on predator experience and add a new column
-data[, c("Zcumul_xp_killer") :=
-       lapply(.SD, standardize),
-     .SDcols = 7]
+#data[, c("Zcumul_xp_killer") :=
+#       lapply(.SD, standardize),
+#     .SDcols = 7]
+
 
 # ==========================================================================
 # ==========================================================================
@@ -89,13 +91,14 @@ data[, c("Zcumul_xp_killer") :=
 
 #Formula to have the strength of the relation for each player
 form_guard_pred_avatar = brmsformula(guard_time_total ~ 1 +
-                                Zcumul_xp_killer +
-                                Zpred_game_duration +
-                                predator_avatar_id +
-                                (1 + Zcumul_xp_killer | predator_id), 
-                                  sigma ~ 1 + Zcumul_xp_killer + Zpred_game_duration +
-                                  predator_avatar_id + (1 | predator_id)) +
-                        gaussian()
+                                       Zcumul_xp_killer +
+                                       Zpred_game_duration +
+                                       (1 + Zcumul_xp_killer | predator_id) +
+                                       (1 | predator_avatar_id), 
+                                     sigma ~ 1 + Zcumul_xp_killer + Zpred_game_duration +
+                                       (1 + Zcumul_xp_killer | predator_id)) +
+                              gaussian()
+
 
   
 
@@ -107,9 +110,9 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b"),
   # prior on the intercept (guard time)
-  set_prior("normal(0, 2)",
+  set_prior("normal(1, 1)",
             class = "Intercept"),
-  # priors on variance parameters (predator id ?)
+  # priors on variance parameters (predator id et avatar?)
   set_prior("normal(0, 1)",
             class = "sd")
 )
@@ -134,8 +137,8 @@ priors <- c(
 #Modele complet
 mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
                   warmup = 700,
-                  iter = 5000,
-                  thin = 12,
+                  iter = 5200,
+                  thin = 18,
                   chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",
