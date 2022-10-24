@@ -44,6 +44,10 @@ donnees_unique <- donnees_unique[!(hunting_success> 0 & guard_time_total == 0)]
 donnees_unique <- donnees_unique[!(guard_time_total == 0 & latency_1st_capture == "NaN")]
 
 
+#Transformer guarding time en sqrt
+donnees_unique[, ":=" (guard_time_total_sqrt = sqrt(guard_time_total))]
+
+
 
 #Ajouter une colonne au tableau unique pour le niveau d'expertise
 donnees_unique[cumul_xp_killer <= 100, expertise := "novice"]
