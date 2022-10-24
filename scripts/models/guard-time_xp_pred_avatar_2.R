@@ -32,10 +32,10 @@ data <- fread(file.path(folder, "FraserFrancoetalXXXX-data.csv"),
 data <- unique(data)
 
 #Remove the 2 matches with no sacrificed preys since the guarding time is not 0, it's not existant
-donnees2_unique <- donnees2_unique[!(guard_time_total == 0 & sacrificed_count == 0)]
+data <- data[!(guard_time_total == 0 & sacrificed_count == 0)]
 
 #Remove matches with NAs in latency before 1st capture cause no opportunity to guard
-donnees2_unique <- donnees2_unique[!is.na(donnees2_unique$latency_1st_capture),]
+data <- data[!is.na(data$latency_1st_capture),]
 
 
 # ==========================================================================
