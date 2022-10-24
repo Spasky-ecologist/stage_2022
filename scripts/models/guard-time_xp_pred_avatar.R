@@ -61,7 +61,7 @@ standardize <- function(x) {(x - mean(x, na.rm = TRUE)) /
 #Use standardisation formula on game duration and add a new column
 data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
               lapply(.SD, standardize),
-            .SDcols = 2, 7]
+            .SDcols = c(2, 7)]
 
 
 #Use standardisation formula on predator experience and add a new column
