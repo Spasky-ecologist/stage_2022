@@ -29,7 +29,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar.rds")
+model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_sqrt.rds")
 
 
 # Prepare model draws --------------------------------------------------------------
@@ -190,8 +190,8 @@ glmm_plot <- ggplot(tab,
     size = 1,
     color = "black") +
   ylab("Guarding time\n") +
-  scale_y_continuous(breaks = seq(0, 100, 25),
-                     limits = c(0, 100)) +
+  scale_y_continuous(breaks = seq(0, 15, 5),
+                     limits = c(0, 15)) +
   scale_x_continuous(breaks = scaled_breaks,
                      labels = seq(0, 500, 100)) +
   xlab("\nCumulative experience") +
@@ -200,7 +200,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_scaled.png",
+         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_scaled_sqrt.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
