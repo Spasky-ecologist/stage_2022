@@ -85,7 +85,7 @@ data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_pred_avatar = brmsformula(guard_time_total_sqrt ~ 1 +
+form_guard_pred_avatar_sqrt = brmsformula(guard_time_total_sqrt ~ 1 +
                                        Zcumul_xp_killer +
                                        Zpred_game_duration +
                                        (1 + Zcumul_xp_killer | predator_id) +
@@ -131,7 +131,7 @@ priors <- c(
 # Model specifications -----------------------------------------------------
 
 #Modele complet
-mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
+mod_pred_avatar_sqrt <- brm(formula = form_guard_pred_avatar_sqrt,
                   warmup = 700,
                   iter = 6200,
                   thin = 22,
@@ -150,7 +150,7 @@ mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(mod_pred_avatar, file = "guard_time_xp_base_model_pred_avatar_sqrt.rds")
+saveRDS(mod_pred_avatar_sqrt, file = "guard_time_xp_base_model_pred_avatar_sqrt.rds")
 
 
 
