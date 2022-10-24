@@ -111,7 +111,8 @@ priors <- c(
             class = "b"),
   # prior on the intercept (guard time)
   set_prior("normal(1, 1)",
-            class = "Intercept"),
+            class = "Intercept",
+            lb = 0),
   # priors on variance parameters (predator id et avatar?)
   set_prior("normal(0, 1)",
             class = "sd")
@@ -137,8 +138,8 @@ priors <- c(
 #Modele complet
 mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
                   warmup = 700,
-                  iter = 5200,
-                  thin = 18,
+                  iter = 6200,
+                  thin = 22,
                   chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",
