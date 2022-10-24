@@ -64,11 +64,6 @@ data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
             .SDcols = c(2, 7)]
 
 
-#Use standardisation formula on predator experience and add a new column
-#data[, c("Zcumul_xp_killer") :=
-#       lapply(.SD, standardize),
-#     .SDcols = 7]
-
 
 # ==========================================================================
 # ==========================================================================
@@ -90,7 +85,7 @@ data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
 
 
 #Formula to have the strength of the relation for each player
-form_guard_pred_avatar = brmsformula(guard_time_total ~ 1 +
+form_guard_pred_avatar = brmsformula(guard_time_total_sqrt ~ 1 +
                                        Zcumul_xp_killer +
                                        Zpred_game_duration +
                                        (1 + Zcumul_xp_killer | predator_id) +
@@ -155,7 +150,7 @@ mod_pred_avatar <- brm(formula = form_guard_pred_avatar,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(mod_pred_avatar, file = "guard_time_xp_base_model_pred_avatar.rds")
+saveRDS(mod_pred_avatar, file = "guard_time_xp_base_model_pred_avatar_sqrt.rds")
 
 
 
