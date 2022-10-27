@@ -8,6 +8,7 @@ library(dplyr)
 library(ggplot2)
 library(brms)
 library(bayesplot)
+library(tidybayes)
 
 
 #Rappel des fonctions dans le package brms
@@ -23,9 +24,10 @@ donnees_select <- select(donnees, match_encode_id, game_mode, environment_id, pr
                         prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
 #Selectionner les colonnes d'interets mais moins pour faire un tableau des predateur unique
-donnees_small <- select(donnees, match_encode_id, environment_id, predator_id, pred_game_duration, total_chase_duration, avg_chase_duration, 
-                       pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total, latency_1st_capture, 
-                       prey_total_unhook_count, hunting_success, cumul_xp_killer)
+donnees_small <- select(donnees, match_encode_id, environment_id, predator_id, predator_avatar_id,
+                        pred_game_duration, total_chase_duration, avg_chase_duration, 
+                        pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total,
+                        latency_1st_capture, prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
 
 #Tableau unique des predateurs
@@ -400,9 +402,9 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
         sd(x, na.rm = TRUE)}
     
       #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
-      data_expert[, c("Zcumul_xp_killer") :=
+      data_expert[, c("Zpred_game_duration") :=
            lapply(.SD, standardize), 
-         .SDcols = 15]
+         .SDcols = 5]
     
       
       
@@ -434,12 +436,17 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
     
     
     #Modele du temps a garder selon l'experience
-    mod_guard_xp = brm(guard_time_total ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
+    mod_guard_xp = brm(guard_time_total_sqrt ~ s(cumul_xp_killer), data = data_expert, control = list(adapt_delta = 0.99))
     
       #Formule pour le modele
-      form_guard = brmsformula(guard_time_total ~ 1 + Zcumul_xp_killer + (1 | predator_id), 
-                         sigma ~ 1 + Zcumul_xp_killer) +
-          gaussian()
+      form_guard = brmsformula(guard_time_total_sqrt ~ 1 +
+                                 expertise +
+                                 Zpred_game_duration +
+                                 (1 + expertise | predator_id) +
+                                 (1 | predator_avatar_id), 
+                               sigma ~ 1 + expertise + Zpred_game_duration +
+                                 (1 + expertise | predator_id)) +
+        gaussian()
       
       
       
@@ -462,40 +469,97 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
         set_prior("normal(0, 2)",
                   class = "b"),
         # prior on the intercept (guard time)
-        set_prior("normal(0, 2)",
-                  class = "Intercept"),
-        # priors on variance parameters (predator id ?)
+        set_prior("normal(1, 1)",
+                  class = "Intercept",
+                  lb = 0),
+        # priors on variance parameters (predator id et avatar?)
         set_prior("normal(0, 1)",
                   class = "sd")
       )
       
     
       #Modele brm plus complet
-      fit_guard <- brm(formula = form_guard_slope,
-                  iter = 1500,
-                  warmup = 500,
-                  thin = 4,
-                  chains = 4,
-                  seed = 123,
-                  prior = priors,
-                  control = list(adapt_delta = 0.95),
-                  save_pars = save_pars(all = TRUE),
-                  sample_prior = TRUE,
-                  data = data_expert)
+      fit_guard <- brm(formula = form_guard,
+                       warmup = 500,
+                       iter = 1500,
+                       thin = 4,
+                       chains = 4,
+                       #threads = threading(12),
+                       backend = "cmdstanr",
+                       seed = 123,
+                       prior = priors,
+                       control = list(adapt_delta = 0.95),
+                       save_pars = save_pars(all = TRUE),
+                       sample_prior = TRUE,
+                       data = data_expert)
     
     
     
     #Graphique de l'intercept, de la variable x et des chaines
     plot(fit_guard)
     
+    #Model relation plot
+    plot(conditional_effects(model))
+    
     #La moyenne de l'echantillon (noir) vs les moyennes des sims
-    bayesplot_grid(pp_check(fit_guard, type = 'stat', stat = mean))
+    test1 <- bayesplot_grid(pp_check(fit_guard, type = 'stat', stat = mean))
+    
+    ggexport(test1,
+             filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_expertise_mean.png",
+             width = 1500, height = 1500, res = 300)
     
     #Distribution de notre echantillon vs les sims
     bayesplot_grid(pp_check(fit_guard, ndraws = 100))
     
     #Resume du modele
-    summary(fit_guard)
+    test2 <- summary(fit_guard)
+    
+    sink("./outputs/model_diagnostics/GT_xp_expertise_summary.txt")
+    print(summary(fit_guard))
+    sink()
+    
+    # With intercept using built-in function
+    fig2 <- conditional_effects(fit_guard, method = "fitted", robust = FALSE)
+    
+    # Extract values in a table
+    tab2 <- fig2$expertise
+    
+    # Transform as data.table
+    tab2 <- data.table(tab2)
+    
+    
+    # Back transform y-axis values and confidence intervals
+    tab2[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
+    tab2[, ":=" (lower_unsqrt = (lower__ ^ 2))]
+    tab2[, ":=" (upper_unsqrt = (upper__ ^ 2))]
+    
+    
+    plot(tab2$estimate_unsqrt ~ tab2$expertise)
+    
+    
+    (boxplot_expertise <- ggplot(data_expert, aes(expertise, guard_time_total)) +
+        geom_boxplot() +  # could be a significant effect between locations so should look at that
+        theme_bw() +
+        xlab("Expertise\n") +
+        ylab("Guard time") +
+        theme(axis.text = element_text(size = 12),
+              axis.title = element_text(size = 14, face = "plain")))  
+    
+    
+    (expertise_fit <- data_expert %>%
+        group_by(expertise) %>%
+        add_predicted_draws(fit_guard) %>%
+        ggplot(aes(x = expertise, y = guard_time_total, color = ordered(expertise), fill = ordered(expertise))) +
+        stat_lineribbon(aes(y = .prediction), .width = c(.95, .80, .50), alpha = 1/4) +
+        geom_point(data = data_expert) +
+        scale_fill_brewer(palette = "Set2") +
+        scale_color_brewer(palette = "Dark2") +
+        theme_bw() +
+        ylab("Guard time\n") +
+        xlab("\nExpertise") +
+        theme_bw() +
+        theme(legend.title = element_blank()))
+    
     
     #Mettre les residus du modele dans un variable
     residus = resid(fit_guard)
