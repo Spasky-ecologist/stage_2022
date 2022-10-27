@@ -182,49 +182,49 @@ dens_plot <- brms::pp_check(mod_pred_avatar_expertise,
 # Prepare the plot for population-level relation ---------------------------------------------------------
 
 # With intercept using built-in function
-fig1 <- conditional_effects(mod_pred_avatar_expertise, method = "fitted", robust = FALSE)
+#fig1 <- conditional_effects(mod_pred_avatar_expertise, method = "fitted", robust = FALSE)
 
 # Extract values in a table
-tab <- fig1$Zcumul_xp_killer
+#tab <- fig1$Zcumul_xp_killer
 
 # Transform as data.table
-tab <- data.table(tab)
+#tab <- data.table(tab)
 
 # Back transform x-axis values
-sequence <- (seq(0, 500, 100) - mean(data$cumul_xp_killer))
-standev <- sd(data$cumul_xp_killer)
-scaled_breaks <- sequence / standev
+#sequence <- (seq(0, 500, 100) - mean(data$cumul_xp_killer))
+#standev <- sd(data$cumul_xp_killer)
+#scaled_breaks <- sequence / standev
 
 # Back transform y-axis values and confidence intervals
-tab[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
-tab[, ":=" (lower_unsqrt = (lower__ ^ 2))]
-tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
+#tab[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
+#tab[, ":=" (lower_unsqrt = (lower__ ^ 2))]
+#tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
 
 #Population-level relation plot
-glmm_plot <- ggplot(tab,
-                    aes(x = Zcumul_xp_killer,
-                        y = estimate_unsqrt)) +
-  geom_ribbon(aes(x = Zcumul_xp_killer,
-                  ymin = lower_unsqrt,
-                  ymax = upper_unsqrt),
-              alpha = 0.5,
-              fill = "gray") +
-  geom_line(#linetype = "dashed",
-    size = 1,
-    color = "black") +
-  ylab("Guarding time\n") +
-  scale_y_continuous(breaks = seq(0, 100, 10),
-                     limits = c(0, 100)) +
-  scale_x_continuous(breaks = scaled_breaks,
-                     labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience") +
-  custom_theme
+#glmm_plot <- ggplot(tab,
+#                    aes(x = Zcumul_xp_killer,
+#                        y = estimate_unsqrt)) +
+#  geom_ribbon(aes(x = Zcumul_xp_killer,
+#                  ymin = lower_unsqrt,
+#                  ymax = upper_unsqrt),
+#              alpha = 0.5,
+#              fill = "gray") +
+#  geom_line(#linetype = "dashed",
+#    size = 1,
+#    color = "black") +
+#  ylab("Guarding time\n") +
+#  scale_y_continuous(breaks = seq(0, 100, 10),
+#                     limits = c(0, 100)) +
+#  scale_x_continuous(breaks = scaled_breaks,
+#                     labels = seq(0, 500, 100)) +
+#  xlab("\nCumulative experience") +
+#  custom_theme
 
 
 #Save the plot image
-ggexport(glmm_plot,
-         filename = "./outputs/plots/GT_xp_glmm_pred_avatar_expertise.png",
-         width = 1500, height = 1500, res = 300)
+#ggexport(glmm_plot,
+#         filename = "./outputs/plots/GT_xp_glmm_pred_avatar_expertise.png",
+#         width = 1500, height = 1500, res = 300)
 
 
 #Export the plots
