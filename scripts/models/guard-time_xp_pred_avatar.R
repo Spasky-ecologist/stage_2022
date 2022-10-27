@@ -14,6 +14,8 @@ options(mc.cores = parallel::detectCores())
 library(data.table)
 library(brms)
 library(parallel)
+library(ggpubr)
+library(ggplot2)
 #library(cmdstanr)
 
 
@@ -151,6 +153,8 @@ mod_pred_avatar_sqrt <- brm(formula = form_guard_pred_avatar_sqrt,
 # Save the model object ----------------------------------------------------
 
 saveRDS(mod_pred_avatar_sqrt, file = "guard_time_xp_base_model_pred_avatar_sqrt.rds")
+
+#Save plots and outputs ----------------------------------------------------
 
 
 
