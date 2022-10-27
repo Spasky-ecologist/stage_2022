@@ -240,6 +240,7 @@ ggexport(dens_plot,
 #Export txt file for summary
 sink("./outputs/plots/GT_xp_expertise_summary.txt")
 print(summary(mod_pred_avatar_expertise))
+sink()
 
 
 
