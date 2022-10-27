@@ -174,6 +174,11 @@ sequence <- (seq(0, 500, 100) - mean(donnees_unique$cumul_xp_killer))
 standev <- sd(donnees_unique$cumul_xp_killer)
 scaled_breaks <- sequence / standev
 
+# Back transform y-axis values and confidence intervals
+tab[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
+tab[, ":=" (lower_unsqrt = (lower__ ^ 2))]
+tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
+
 
 
 # Produce the plot --------------------------------------------------------
