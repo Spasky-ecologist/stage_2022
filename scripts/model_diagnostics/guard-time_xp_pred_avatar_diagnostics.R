@@ -29,7 +29,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_sqrt.rds")
+model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar.rds")
 
 
 # Prepare model draws --------------------------------------------------------------
@@ -70,6 +70,7 @@ bayesplot_grid(pp_check(model, ndraws = 100))
 
 #Resume du modele
 summary(model)
+
 
 
 # Plot prior and posterior draws ---------------------------------------------------
@@ -174,24 +175,28 @@ sequence <- (seq(0, 500, 100) - mean(donnees_unique$cumul_xp_killer))
 standev <- sd(donnees_unique$cumul_xp_killer)
 scaled_breaks <- sequence / standev
 
+# Back transform y-axis values and confidence intervals
+tab[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
+tab[, ":=" (lower_unsqrt = (lower__ ^ 2))]
+tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
 
 
 # Produce the plot --------------------------------------------------------
 
 glmm_plot <- ggplot(tab,
                     aes(x = Zcumul_xp_killer,
-                        y = estimate__)) +
+                        y = estimate_unsqrt)) +
   geom_ribbon(aes(x = Zcumul_xp_killer,
-                  ymin = lower__,
-                  ymax = upper__),
+                  ymin = lower_unsqrt,
+                  ymax = upper_unsqrt),
               alpha = 0.5,
               fill = "gray") +
   geom_line(#linetype = "dashed",
     size = 1,
     color = "black") +
   ylab("Guarding time\n") +
-  scale_y_continuous(breaks = seq(0, 15, 5),
-                     limits = c(0, 15)) +
+  scale_y_continuous(breaks = seq(0, 100, 10),
+                     limits = c(0, 100)) +
   scale_x_continuous(breaks = scaled_breaks,
                      labels = seq(0, 500, 100)) +
   xlab("\nCumulative experience") +
@@ -200,7 +205,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_scaled_sqrt.png",
+         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_sqrt.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
