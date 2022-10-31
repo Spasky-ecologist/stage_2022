@@ -49,6 +49,19 @@ data <- unique(data)
 # Transform ----------------------------------------------------------------
 
 
+
+#Add in expertise level ----------------------------------------------------
+
+data[cumul_xp_killer <= 100, expertise := "novice"]
+data[cumul_xp_killer %between% c(101, 350), expertise := "interm"]
+data[cumul_xp_killer >= 351, expertise := "expert"]
+
+#Make expertise a factor
+data$expertise = as.factor(data$expertise)
+
+
+
+
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Fonction pour standardiser
