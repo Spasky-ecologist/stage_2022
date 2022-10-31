@@ -184,28 +184,20 @@ tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
 # Produce the plot --------------------------------------------------------
 
 glmm_plot <- ggplot(tab,
-                    aes(x = effect1__,
+                    aes(x = expertise,
                         y = estimate_unsqrt)) +
-  geom_ribbon(aes(x = effect1__,
-                  ymin = lower_unsqrt,
-                  ymax = upper_unsqrt),
-              alpha = 0.5,
-              fill = "gray") +
-  geom_line(#linetype = "dashed",
-    size = 1,
-    color = "black") +
+  geom_boxplot() +
   ylab("Guarding time\n") +
-  #scale_y_continuous(breaks = seq(0, 100, 10),
-  #                   limits = c(0, 100)) +
-  #scale_x_continuous(breaks = scaled_breaks,
-  #                   labels = seq(0, 500, 100)) +
-  xlab("\nCumulative experience") +
+  scale_y_continuous(breaks = seq(0, 400, 50),
+                     limits = c(0, 400)) +
+  scale_x_discrete(limits = c("novice", "interm", "expert")) +
+  xlab("\nExperience level") +
   custom_theme
 
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_sqrt_expertise.png",
+         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_expertise_scaled.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
