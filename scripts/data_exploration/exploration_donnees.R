@@ -14,6 +14,9 @@ library(tidybayes)
 #Rappel des fonctions dans le package brms
 objects(grep("brms", search()))
 
+#Chercher le package d'une fonction
+find("compare.fits")
+
 #Lire le fichier excel de donnees
 donnees <- read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv")
 
@@ -412,6 +415,14 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
       #Find (columns that contain specific string)
       test <- select(posterior_fit,contains("sigma"))
       
+      
+      #Test from youtube video (Building and Comparing Mixed Models in R:
+        #ICC, Bayes Factor, and Variance Explained)
+      require(flexplot)
+      
+      test_baseline <- brm(guard_time_total_sqrt ~ 1 + (1 | predator_id), data = data_expert)
+      
+      performance::variance_decomposition(test_baseline)
     
 
   #Graphiques de la vitesse et temps a garder selon l'experience
