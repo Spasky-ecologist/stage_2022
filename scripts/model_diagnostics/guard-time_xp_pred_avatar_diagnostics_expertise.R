@@ -180,16 +180,20 @@ tab[, ":=" (estimate_unsqrt = (estimate__ ^ 2))]
 tab[, ":=" (lower_unsqrt = (lower__ ^ 2))]
 tab[, ":=" (upper_unsqrt = (upper__ ^ 2))]
 
+#Back transform the standard error from sqrt to normal values
+tab[, ":=" (se_unsqrt = (se__ ^ 2))]
+
 
 # Produce the plot --------------------------------------------------------
 
 glmm_plot <- ggplot(tab,
                     aes(x = expertise,
-                        y = estimate_unsqrt)) +
+                        y = estimate__)) +
   geom_boxplot() +
+  geom_errorbar(data = tab, aes(ymin = estimate__ - se__, ymax = estimate__ + se__)) +
   ylab("Guarding time\n") +
-  scale_y_continuous(breaks = seq(0, 400, 50),
-                     limits = c(0, 400)) +
+  scale_y_continuous(breaks = seq(8, 10, 0.1),
+                     limits = c(8, 10)) +
   scale_x_discrete(limits = c("novice", "interm", "expert")) +
   xlab("\nExperience level") +
   custom_theme
@@ -197,7 +201,7 @@ glmm_plot <- ggplot(tab,
 
 #Save the plot image
 ggexport(glmm_plot,
-         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_expertise_scaled.png",
+         filename = "./outputs/figures/GT_xp_glmm_pred_avatar_expertise_sqrt.png",
          width = 1500, height = 1500, res = 300)
 
 # ==========================================================================
