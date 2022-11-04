@@ -29,27 +29,6 @@ library(ggplot2)
 
 
 
-# Load data -------------------------------------------------------------
-
-data <- fread("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv",
-              select = c("match_encode_id", "pred_game_duration", "latency_1st_capture",
-                         "predator_id", "predator_avatar_id", "guard_time_total", "cumul_xp_killer"))
-
-data <- unique(data)
-
-#Remove zeros in guarding time for matches with no capture (guarding is theorically NA and not 0)
-data <- data[!(guard_time_total == 0 & latency_1st_capture == "NaN")]
-
-#Add in expertise level ----------------------------------------------------
-
-data[cumul_xp_killer <= 100, expertise := "novice"]
-data[cumul_xp_killer %between% c(101, 350), expertise := "interm"]
-data[cumul_xp_killer >= 351, expertise := "expert"]
-
-#Make expertise a factor
-data$expertise = as.factor(data$expertise)
-
-
 # Load models -----------------------------------------------------------
 
 model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_expertise.rds")
@@ -60,72 +39,6 @@ model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_experti
 
 # Extract posterior draws
 posterior_fit <- as_draws_df(model)
-
-#find columns containing a string
-select_intercept <- select(posterior_fit, contains("Intercept"))
-
-
-
-# Extract posterior draws for sd of mu and sigma
-draws <- data.table(
-  as_draws_df(
-    model,
-    variable = c("^sd_predator_id__"),
-    regex = TRUE
-    )
-)
-
-
-# Long format
-table <- melt(draws,
-              measure = patterns("^sd_predator_id"),
-              variable.name = "Parameter")
-
-
-# Add xp level
-table[, xp_level := ifelse(Parameter %like% "novice",
-                           "novice",
-                           "unknown")]
-table[Parameter %like% "interm", xp_level := "interm"]
-table[Parameter %like% "Intercept", xp_level := "advanced"]
-
-
-# Add variable
-table[, variable := ifelse(Parameter %like% "Intercept",
-                           "guard_time",
-                           "guard_time")]
-
-
-# Change parameter factor levels to sigma or mu
-table[, Parameter := ifelse(Parameter %like% "sigma", "sigma", "mu")]
-
-
-# Re-order the columns
-table <- table[, c(7,6,4,5,1,2,3)]
-
-
-# Sdev to variances -----------------------------------------------------
-
-table[Parameter == "mu", value := value^2]
-table[Parameter == "sigma", value := exp(value^2)]
-
-#Backtransform the sqrt
-table[Parameter == "mu", value := value^2]
-
-
-
-# Extract the mean of traits at each xp level ---------------------------
-
-# Predator speed
-mean_guard1 <- mean(data[expertise == "novice", guard_time_total])
-mean_guard2 <- mean(data[expertise == "interm", guard_time_total])
-mean_guard3 <- mean(data[expertise == "expert", guard_time_total])
-
-
-# Add values in a column
-table[xp_level == "novice" & variable == "guard_time", mean := mean_guard1]
-table[xp_level == "interm" & variable == "guard_time", mean := mean_guard2]
-table[xp_level == "advanced" & variable == "guard_time", mean := mean_guard3]
 
 
 # =======================================================================
