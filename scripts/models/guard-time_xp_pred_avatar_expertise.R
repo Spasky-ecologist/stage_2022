@@ -99,8 +99,8 @@ data[, c("Zpred_game_duration", "Zcumul_xp_killer") :=
 
 #Formula to have the strength of the relation for each player
 form_guard_pred_avatar_expertise = brmsformula(guard_time_total_sqrt ~ 1 +
-                                            expertise +
-                                            Zpred_game_duration +
+                                              expertise +
+                                              Zpred_game_duration +
                                             (1 + expertise | predator_id) +
                                             (1 | predator_avatar_id), 
                                           sigma ~ 1 + expertise + Zpred_game_duration +
