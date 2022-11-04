@@ -64,9 +64,6 @@ posterior_fit <- as_draws_df(model)
 #find columns containing a string
 select_intercept <- select(posterior_fit, contains("Intercept"))
 
-#1e graphgique guard time moyen
-#Extraire les colonnes, additionner les colonnes intercept et novice
-#detransform sqrt en 1e et delog en 2e (exp)
 
 
 # Extract posterior draws for sd of mu and sigma
@@ -78,6 +75,18 @@ draws <- data.table(
     regex = TRUE
     )
 )
+
+
+
+# Transform the deviations to their mean or sd
+
+#mean
+draws$b_expertiseinterm <- draws$b_expertiseinterm + draws$b_Intercept
+draws$b_expertisenovice <- draws$b_expertisenovice + draws$b_Intercept
+
+#sd
+draws$b_sigma_expertiseinterm <- draws$b_sigma_expertiseinterm + draws$b_sigma_Intercept
+draws$b_sigma_expertisenovice <- draws$b_sigma_expertisenovice + draws$b_sigma_Intercept
 
 
 # Long format
@@ -106,6 +115,12 @@ table[, Parameter := ifelse(Parameter %like% "sigma", "sigma", "mu")]
 
 # Re-order the columns
 table <- table[, c(7,6,4,5,1,2,3)]
+
+
+#1e graphique guard time moyen
+#Extraire les colonnes, additionner les colonnes intercept et novice
+#detransform sqrt en 1e et delog en 2e (exp)
+
 
 
 # Sdev to variances -----------------------------------------------------
