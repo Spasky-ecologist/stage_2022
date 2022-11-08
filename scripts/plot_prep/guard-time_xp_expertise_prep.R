@@ -125,17 +125,19 @@ table <- table[, c(7,6,4,5,1,2,3)]
 
 # Sdev to variances -----------------------------------------------------
 
-table[Parameter == "mu", value := value^2]
 table[Parameter == "sigma", value := exp(value^2)]
 
 #Backtransform the sqrt (?)
 table[Parameter == "mu", value := value^2]
+#table[Parameter == "sigma", value := value^2]
+
+#Backtransform the log (?)
 
 
 
 # Extract the mean of traits at each xp level ---------------------------
 
-# Predator speed
+# Predator guard time
 mean_guard1 <- mean(data[expertise == "novice", guard_time_total])
 mean_guard2 <- mean(data[expertise == "interm", guard_time_total])
 mean_guard3 <- mean(data[expertise == "expert", guard_time_total])
@@ -149,6 +151,30 @@ table[xp_level == "advanced" & variable == "guard_time", mean := mean_guard3]
 
 # =======================================================================
 # =======================================================================
+
+
+
+
+
+
+# =======================================================================
+# Prepare a synthetic table
+# =======================================================================
+
+
+# Rearrange -------------------------------------------------------------
+
+tab1 <- table[Parameter == "mu", c("Parameter", "xp_level",
+                                   "variable")]
+tab2 <- table[Parameter == "sigma", c("Parameter", "xp_level",
+                                      "variable")]
+
+setnames(tab1, "cv_mu", "cv")
+setnames(tab2, "cv_sigma", "cv")
+
+cv_tab <- rbind(tab1, tab2)
+
+
 
 
 
