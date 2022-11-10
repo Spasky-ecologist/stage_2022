@@ -131,6 +131,21 @@ table[Parameter == "mu", value := value^2]
 
 
 
+# Apply transformation to add coefficient of variation ------------------
+
+# Mu pred
+table[Parameter == "mu",
+      cv_mu := sqrt(value / mean),
+      by = c("xp_level", "variable")]
+
+
+# Sigma
+table[Parameter == "sigma", 
+      cv_sigma := sqrt(value - 1),
+      by = c("xp_level", "variable")]
+
+
+
 
 # Extract the mean of traits at each xp level ---------------------------
 
@@ -162,15 +177,15 @@ table[xp_level == "advanced" & variable == "guard_time", mean := mean_guard3]
 # Rearrange -------------------------------------------------------------
 
 tab1 <- table[Parameter == "mu", c("Parameter", "xp_level",
-                                   "variable", "value")]
+                                   "variable", "cv_mu")]
 tab2 <- table[Parameter == "sigma", c("Parameter", "xp_level",
-                                      "variable", "value")]
+                                      "variable", "cv_sigma")]
 
 
-#setnames(tab1, "cv_mu", "cv")
-#setnames(tab2, "cv_sigma", "cv")
+setnames(tab1, "cv_mu", "cv")
+setnames(tab2, "cv_sigma", "cv")
 
-tab <- rbind(tab1, tab2)
+cv_tab <- rbind(tab1, tab2)
 
 
 # Summarize the values (means + 95% CI) ---------------------------------
@@ -180,22 +195,22 @@ lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
 upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
 
 
-tab[, ":=" (mean = mean(value),
-               lower_ci = lower_interval(value),
-               upper_ci = upper_interval(value)),
+cv_tab[, ":=" (mean = mean(cv),
+               lower_ci = lower_interval(cv),
+               upper_ci = upper_interval(cv)),
        by = .(Parameter, xp_level, variable)]
 
-tab <- unique(tab[, c(1:3, 5:7)])
+cv_tab <- unique(cv_tab[, c(1:3, 5:7)])
 
 # Round values to 3 digits
-tab[, c(4:6) := lapply(.SD, function (x) {round(x, digits = 3)}),
+cv_tab[, c(4:6) := lapply(.SD, function (x) {round(x, digits = 3)}),
        .SDcols = c(4:6)]
 
 
 # Save the table --------------------------------------------------------
 
 path <- "./outputs/tables"
-saveRDS(tab, file = file.path(path, "GT_xp_table.rds"))
+saveRDS(cv_tab, file = file.path(path, "GT_xp_table_cv.rds"))
 
 # =======================================================================
 # =======================================================================
