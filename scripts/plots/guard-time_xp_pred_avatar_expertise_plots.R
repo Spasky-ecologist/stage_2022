@@ -21,7 +21,6 @@
 # Librairies ------------------------------------------------------------
 
 library(data.table)
-library(dplyr)
 library(ggpubr)
 library(ggplot2)
 
@@ -42,11 +41,11 @@ tab[xp_level == "advanced", xp_level := "Avancé"]
 # Rename the behaviour names
 tab[variable == "guard_time", variable := "Temps de garde"]
 
-# Reorder factors
-tab <- tab %>% arrange(factor(xp_level, levels = c("Novice",
-                                            "Intermédiaire",
-                                            "Avancé")), Parameter)
 
+# Reorder factors
+tab[, xp_level := factor(xp_level, levels = c("Novice",
+                                              "Intermédiaire",
+                                              "Avancé"))]
 
 # Encode Parameter and variable as factor
 tab[, ":=" (Parameter = as.factor(Parameter),
