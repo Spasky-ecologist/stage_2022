@@ -53,6 +53,11 @@ data$expertise = as.factor(data$expertise)
 
 model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_expertise.rds")
 
+model <- readRDS(
+  file.path(getwd(), 
+            "model_outputs",
+            "guard_time_xp_base_model_pred_avatar_expertise.rds"))
+
 
 # Prepare model draws --------------------------------------------------------------
 
@@ -61,7 +66,7 @@ model <- readRDS("outputs/R_objects/guard_time_xp_base_model_pred_avatar_experti
 posterior_fit <- as_draws_df(model)
 
 #find columns containing a string
-select_intercept <- select(posterior_fit, contains("Intercept"))
+select_intercept <- dplyr::select(posterior_fit, contains("Intercept"))
 
 
 
@@ -124,16 +129,23 @@ table <- table[, c(7,6,4,5,1,2,3)]
 
 # Sdev to variances -----------------------------------------------------
 
-table[Parameter == "sigma", value := exp(value^2)]
+# MFF : Ici, je crois qu'on a juste besoin de faire
+# une détransformation en faisant l'exposant.
+# On fait ensuite le carré pour avoir en unités détransformées
+
+table[Parameter == "sigma", value := exp(value)]
+table[Parameter == "sigma", value := value^2]
 
 #Backtransform the sqrt of guard time (?)
-table[Parameter == "mu", value := value^2]
+ table[Parameter == "mu", value := value^2]
 
 
 
 
 # Extract the mean of traits at each xp level ---------------------------
 
+ # MFF : Je crois que cette partie n'est pas nécessaire
+ 
 # Predator guard time
 mean_guard1 <- mean(data[expertise == "novice", guard_time_total])
 mean_guard2 <- mean(data[expertise == "interm", guard_time_total])
@@ -144,7 +156,6 @@ mean_guard3 <- mean(data[expertise == "expert", guard_time_total])
 table[xp_level == "novice" & variable == "guard_time", mean := mean_guard1]
 table[xp_level == "interm" & variable == "guard_time", mean := mean_guard2]
 table[xp_level == "advanced" & variable == "guard_time", mean := mean_guard3]
-
 
 # =======================================================================
 # =======================================================================
@@ -160,6 +171,8 @@ table[xp_level == "advanced" & variable == "guard_time", mean := mean_guard3]
 
 
 # Rearrange -------------------------------------------------------------
+
+# MFF : pourquoi tu fais cette étape? ---> ici : table = tab
 
 tab1 <- table[Parameter == "mu", c("Parameter", "xp_level",
                                    "variable", "value")]
@@ -194,7 +207,10 @@ tab[, c(4:6) := lapply(.SD, function (x) {round(x, digits = 3)}),
 
 # Save the table --------------------------------------------------------
 
-path <- "./outputs/tables"
+#path <- "./outputs/tables"
+
+# MFF : je change le chemin pour celui de notre onedrive
+path <- file.path(getwd(), "model_outputs")
 saveRDS(tab, file = file.path(path, "GT_xp_table.rds"))
 
 # =======================================================================
