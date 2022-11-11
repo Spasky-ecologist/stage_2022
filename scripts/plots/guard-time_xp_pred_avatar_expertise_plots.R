@@ -30,6 +30,10 @@ library(ggplot2)
 
 # CV table
 path <- "./outputs/tables"
+
+# MFF je change le chemin pour un chemin de notre dossier
+path <- file.path(getwd(), "model_outputs")
+
 tab <- readRDS(file.path(path, "GT_xp_table.rds"))
 
 
@@ -39,7 +43,7 @@ tab[xp_level == "interm", xp_level := "Intermédiaire"]
 tab[xp_level == "advanced", xp_level := "Avancé"]
 
 # Rename the behaviour names
-tab[variable == "guard_time", variable := "Temps de garde"]
+tab[variable == "guard_time", variable := "Temps de garde (s)"]
 
 
 # Reorder factors
@@ -120,7 +124,7 @@ plot1 <- ggplot(tab[Parameter == "mu"],
                      limits = c(70, 96)) +
   
   ylab("Moyenne\n") +
-  xlab("\nBehavior") +
+  #xlab("\nBehavior") +
   
   custom_theme +
   theme(axis.title.x = element_blank(),
@@ -128,6 +132,31 @@ plot1 <- ggplot(tab[Parameter == "mu"],
         legend.key = element_rect(fill = "transparent"),
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 14))
+
+
+# MFF version :
+plot1 <- ggplot(tab[Parameter == "mu"],
+                aes(x = xp_level, y = mean,
+                    color = xp_level,
+                    shape = xp_level)) +
+  
+  geom_pointrange(aes(ymin = lower_ci,
+                      ymax = upper_ci),
+                  size = 1.3,
+                  position = position_dodge(width = 0.3)) +
+  
+  scale_shape_manual(values = c(15, 16, 17)) +
+  scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
+  
+  scale_y_continuous(breaks = seq(60, 100, 10),
+                     limits = c(60, 100)) +
+  scale_x_discrete(expand = c(0,1)) +
+  ylab("\nTemps de garde moyen (s)") +
+  xlab("\nNiveau d'expérience") +
+  custom_theme +
+  theme(axis.title.y = element_blank(),
+        legend.position = "none") +
+  coord_flip()
 
 
 
@@ -160,24 +189,50 @@ plot2 <- ggplot(tab[Parameter == "sigma"],
         legend.title = element_text(size = 15),
         legend.text = element_text(size = 14))
 
+# MFF version :
+plot2 <- ggplot(tab[Parameter == "sigma"],
+       aes(x = xp_level, y = mean,
+           color = xp_level,
+           shape = xp_level)) +
+  
+  geom_pointrange(aes(ymin = lower_ci,
+                      ymax = upper_ci),
+                  size = 1.3,
+                  position = position_dodge(width = 0.3)) +
+  
+  scale_shape_manual(values = c(15, 16, 17)) +
+  scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
+  
+  scale_y_continuous(breaks = seq(0, 6, 2),
+                     limits = c(0, 7)) +
+  scale_x_discrete(expand = c(0,1)) +
+  ylab("\nÉcart-type du temps de garde (s)") +
+  xlab("\nNiveau d'expérience") +
+  custom_theme +
+  theme(axis.title.y = element_blank(),
+        legend.position = "none") +
+  coord_flip()
+
 
 
 # Combine as one figure ------------------------------------------------
 
 # Folder path
-path <- "./outputs/figures"
+#path <- "./outputs/figures"
+path <- file.path(getwd(), "figures")
 
 # Arrange paneled figure
 figure <- ggarrange(plot1, plot2,
                     ncol = 2, nrow = 1,
-                    labels = c("(A)", "(B)"),
-                    common.legend = TRUE,
-                    legend = "top")
+                    labels = c("(A)", "(B)")
+                    #common.legend = TRUE,
+                    #legend = "top"
+                    )
 
 
 # Save figure
 ggexport(figure,
-         filename = file.path(path, "GT_xp_expertise.png"),
+         filename = file.path(path, "GT_xp_expertiseMFF.png"),
          width = 3500,
          height = 1600,
          res = 300)
