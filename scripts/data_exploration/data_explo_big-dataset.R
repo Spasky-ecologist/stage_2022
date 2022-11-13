@@ -34,9 +34,9 @@ setDT(donnees2_unique)
 
 
 #Count the number of matches that have a guarding time of 0 but where prey were sacrificed (false 0s)
-count(donnees2_unique[(sacrificed_count > 0 & guard_time_total == 0)])
+count(donnees2_unique[(sacrificed_count == 0 & guard_time_total == 0)])
 
-  #Remove the 2 matches with no sacrificed preys since the guarding time is not 0, it's not existant
+  #Remove the 7276 matches with no sacrificed preys since the guarding time is not 0, it's not existant
   donnees2_unique <- donnees2_unique[!(guard_time_total == 0 & sacrificed_count == 0)]
   
   
@@ -50,7 +50,7 @@ count(donnees2_unique[(hunting_success > 0 & guard_time_total == 0)])
 #but no captures were made (no opportunity to guard) - doesn't detect them
 count(donnees2_unique[(guard_time_total == 0 & latency_1st_capture == "NA")])
 
-  #Remove matches with NAs in latency before 1st capture cause no opportunity to guard
+  #Remove the 11 721 matches with NAs in latency before 1st capture cause no opportunity to guard
   donnees2_unique <- donnees2_unique[!is.na(donnees2_unique$latency_1st_capture),]
 
   
