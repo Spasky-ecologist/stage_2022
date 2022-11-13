@@ -37,7 +37,7 @@ data <- unique(data)
 #Remove the 2 matches with no sacrificed preys since the guarding time is not 0, it's not existant
 data <- data[!(guard_time_total == 0 & sacrificed_count == 0)]
 
-#Remove matches with NAs in latency before 1st capture cause no opportunity to guard
+#Remove the 11 721 matches with NAs in latency before 1st capture cause no opportunity to guard
 data <- data[!is.na(data$latency_1st_capture),]
 
 
