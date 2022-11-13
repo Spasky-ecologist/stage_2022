@@ -58,3 +58,6 @@ count(donnees2_unique[(guard_time_total == 0 & latency_1st_capture == "NA")])
 #Data points of guard time as function of the xp of killers 
 qplot(x = cumul_xp_killer, y = guard_time_total, data = donnees2_unique)
 
+
+hist(donnees2_unique$guard_time_total)
+hist(sqrt(donnees2_unique$guard_time_total))
