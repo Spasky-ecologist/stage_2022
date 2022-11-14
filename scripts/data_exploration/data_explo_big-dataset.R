@@ -71,17 +71,36 @@ hist(sqrt(donnees2_unique$guard_time_total))
 
 
 #Distribution of predator speed data
-hist(donnees2_unique$pred_speed)
-hist(donnees2_unique$pred_speed, xlim = c(0, 1), ylim = c(0, 1000), breaks = 100)
-
-hist(donnees2_unique$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
-
-#Count the number of matches that have a speed of 0
-count(donnees2_unique[(pred_amount_tiles_visited > 0 & pred_amount_tiles_visited <= 10)])
+hist(donnees2_unique$pred_speed, breaks = 250)
+hist(donnees2_unique$pred_speed, xlim = c(0, 0.1), ylim = c(0, 500), breaks = 5550)
 
 min(donnees2$pred_speed)
 
 
+
+hist(donnees2_unique$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
+
+#Count the number of matches that have a speed of 0
+count(donnees2_unique[(pred_amount_tiles_visited < 2 & pred_speed < 0.05)])
+
+test <- (donnees2_unique[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21 &
+                            total_chase_duration >= 198)])
+
+
+
+#Remove the 736 matches with a speed less than 0.06 (there's a spike in the data)
+donnees2_unique <- donnees2_unique[!(pred_speed < 0.06)]
+
+#Remove the 624 matches that have an amount below 2 of tiles visited
+donnees2_unique <- donnees2_unique[!(pred_amount_tiles_visited < 2)]
+
+
+
+#Distribution of speed after the removal of matches
+hist(donnees2_unique$pred_speed)
+
+#Distribution of tiles visited by predator after the removal of matches
+hist(donnees2_unique$pred_amount_tiles_visited)
 
 
 
@@ -91,9 +110,13 @@ min(donnees2$pred_speed)
 #Distribution of chase time in the data
 hist(donnees2_unique$total_chase_duration, breaks = 100)
 
+hist(donnees2_unique$total_chase_duration, xlim = c(0, 10), ylim = c(0, 250), breaks = 5000)
+
 #Minimum value of chase time
 min(donnees2_unique$total_chase_duration)
 
 
 #How many 0s in chase time
 count(donnees2_unique[(total_chase_duration == 0)])
+
+count(donnees2_unique[(total_chase_duration > 0 & total_chase_duration <= 2)])
