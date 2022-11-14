@@ -30,9 +30,12 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 data <- fread(file.path(folder, "FraserFrancoetalXXXX-data.csv"),
               select = c("match_encode_id", "pred_game_duration", "predator_id",
                          "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
-                         "sacrificed_count"))
+                         "pred_amount_tiles_visited"))
 
 data <- unique(data)
+
+#Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
+data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # ==========================================================================
 # ==========================================================================
