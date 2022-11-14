@@ -81,18 +81,12 @@ min(donnees2$pred_speed)
 hist(donnees2_unique$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
 
 #Count the number of matches that have a speed of 0
-count(donnees2_unique[(pred_amount_tiles_visited < 2 & pred_speed < 0.05)])
-
-test <- (donnees2_unique[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21 &
-                            total_chase_duration >= 198)])
+count(donnees2_unique[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 
 
-#Remove the 736 matches with a speed less than 0.06 (there's a spike in the data)
-donnees2_unique <- donnees2_unique[!(pred_speed < 0.06)]
-
-#Remove the 624 matches that have an amount below 2 of tiles visited
-donnees2_unique <- donnees2_unique[!(pred_amount_tiles_visited < 2)]
+#Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
+donnes2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 
 
