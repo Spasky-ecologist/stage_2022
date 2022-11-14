@@ -86,7 +86,7 @@ count(donnees2_unique[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 
 #Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
-donnes2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+donnees2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 
 
@@ -114,3 +114,10 @@ min(donnees2_unique$total_chase_duration)
 count(donnees2_unique[(total_chase_duration == 0)])
 
 count(donnees2_unique[(total_chase_duration > 0 & total_chase_duration <= 2)])
+
+
+
+#Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
+  #The predator is most likely afk
+donnees2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+
