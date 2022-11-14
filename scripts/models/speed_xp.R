@@ -28,7 +28,7 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "FraserFrancoetalXXXX-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "predator_id",
+              select = c("match_encode_id", "pred_game_duration", "predator_id", "pred_speed",
                          "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
                          "pred_amount_tiles_visited"))
 
