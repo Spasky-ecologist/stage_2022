@@ -30,7 +30,7 @@ library(ggplot2)
 
 # Load data -------------------------------------------------------------
 
-data <- fread("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/02_final-data.csv",
+data <- fread("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice Leveille/data/FraserFrancoetalXXXX-data.csv",
               select = c("match_encode_id", "pred_game_duration", "latency_1st_capture",
                          "predator_id", "predator_avatar_id", "guard_time_total", "cumul_xp_killer"))
 
