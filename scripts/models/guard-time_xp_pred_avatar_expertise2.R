@@ -149,9 +149,9 @@ priors <- c(
 
 #Modele complet
 mod_pred_avatar_expertise2 <- brm(formula = form_guard_pred_avatar_expertise2,
-                  warmup = 700,
-                  iter = 6200,
-                  thin = 22,
+                  warmup = 1000,
+                  iter = 10500,
+                  thin = 38,
                   chains = 4,
                   threads = threading(12),
                   backend = "cmdstanr",
@@ -167,7 +167,7 @@ mod_pred_avatar_expertise2 <- brm(formula = form_guard_pred_avatar_expertise2,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(mod_pred_avatar_expertise2, file = "guard_time_xp_base_model_pred_avatar_expertise.rds")
+saveRDS(mod_pred_avatar_expertise2, file = "guard_time_xp_base_model_pred_avatar_expertise2.rds")
 
 #Save plots and outputs ----------------------------------------------------
 
