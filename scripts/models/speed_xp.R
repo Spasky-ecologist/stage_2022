@@ -14,6 +14,8 @@ options(mc.cores = parallel::detectCores())
 library(data.table)
 library(brms)
 library(parallel)
+library(ggpubr)
+library(ggplot2)
 #library(cmdstanr)
 
 
@@ -25,8 +27,10 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
                     "ab991036", "stage_2022", "data")
 
 # Import the data
-data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "predator_id", "pred_speed", "cumul_xp_killer"))
+data <- fread(file.path(folder, "FraserFrancoetalXXXX-data.csv"),
+              select = c("match_encode_id", "pred_game_duration", "predator_id",
+                         "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
+                         "sacrificed_count"))
 
 data <- unique(data)
 
@@ -46,16 +50,29 @@ data <- unique(data)
 # Transform ----------------------------------------------------------------
 
 
+
+#Add in expertise level ----------------------------------------------------
+
+data[cumul_xp_killer <= 100, expertise := "novice"]
+data[cumul_xp_killer %between% c(101, 350), expertise := "interm"]
+data[cumul_xp_killer >= 351, expertise := "expert"]
+
+#Make expertise a factor
+data$expertise = as.factor(data$expertise)
+
+
+
+
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Fonction pour standardiser
 standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
     sd(x, na.rm = TRUE)}
 
-#Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
-data[, c("Zcumul_xp_killer") :=
-              lapply(.SD, standardize), 
-            .SDcols = 4]
+#Use standardisation formula on game duration and add a new column
+data[, c("Zpred_game_duration") :=
+       lapply(.SD, standardize),
+     .SDcols = 2]
 
 # ==========================================================================
 # ==========================================================================
@@ -75,9 +92,14 @@ data[, c("Zcumul_xp_killer") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed = brmsformula(pred_speed ~ 1 + Zcumul_xp_killer + (1 + Zcumul_xp_killer | predator_id), 
-                         sigma ~ 1 + Zcumul_xp_killer) +
-  gaussian()
+form_speed_pred_avatar_expertise = brmsformula(pred_speed ~ 1 +
+                                       expertise +
+                                       Zpred_game_duration +
+                                       (1 + expertise | predator_id) +
+                                       (1 | predator_avatar_id), 
+                                     sigma ~ 1 + expertise + Zpred_game_duration +
+                                       (1 + expertise | predator_id)) +
+                                gaussian()
 
 
 # priors ----------------------------------------------------------------
@@ -87,8 +109,9 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b"),
   # prior on the intercept
-  set_prior("normal(0, 2)",
-            class = "Intercept"),
+  set_prior("normal(1, 1)",
+            class = "Intercept",
+            lb = 0),
   # priors on variance parameters
   set_prior("normal(0, 1)",
             class = "sd")
@@ -112,10 +135,10 @@ priors <- c(
 
 
 #Modele complet
-modele_speed_xp <- brm(formula = form_speed,
+modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_expertise,
                        warmup = 700,
-                       iter = 7500,
-                       thin = 15,
+                       iter = 6200,
+                       thin = 22,
                        chains = 4, 
                        threads = threading(12),
                        backend = "cmdstanr",
@@ -131,8 +154,36 @@ modele_speed_xp <- brm(formula = form_speed,
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_speed_xp, file = "speed_xp_base_model.rds")
+saveRDS(modele_speed_xp_pred_avatar_expertise, file = "speed_xp_base_model_pred_avatar_expertise.rds")
 
+
+#Save plots and outputs ----------------------------------------------------
+
+#Parameter value around posterior distribution
+mean_plot <- brms::pp_check(modele_speed_xp_pred_avatar_expertise,
+                            type = 'stat',
+                            stat = 'mean')
+
+#Observed y outcomes vs posterior predicted outcomes
+dens_plot <- brms::pp_check(modele_speed_xp_pred_avatar_expertise,
+                            type = "dens_overlay")
+
+
+
+#Export the plots ---------------------------------------------------------
+ggexport(mean_plot,
+         filename = "./outputs/plots/SP_xp_pred_avatar_expertise_mean.png",
+         width = 1500, height = 1500, res = 300)
+
+
+ggexport(dens_plot,
+         filename = "./outputs/plots/SP_xp_pred_avatar_expertise_outcomes.png",
+         width = 1500, height = 1500, res = 300)
+
+#Export txt file for summary
+sink("./outputs/plots/SP_xp_expertise_summary.txt")
+print(summary(modele_speed_xp_pred_avatar_expertise))
+sink()
 
 
 # Capture the session ------------------------------------------------------
