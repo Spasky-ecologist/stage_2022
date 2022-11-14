@@ -176,7 +176,7 @@ figure <- ggarrange(plot1, plot2,
 
 # Save figure
 ggexport(figure,
-         filename = file.path(path, "GT_xp_2.png"),
+         filename = file.path(path, "GT_xp.png"),
          width = 3500,
          height = 1600,
          res = 300)
