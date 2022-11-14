@@ -15,9 +15,11 @@ donnees2 <- read.csv("C:/Users/Spasky/OneDrive - UQAM/20220621 - Stage Patrice L
 
 #Select columns wanted for a smaller table
 donnees2_small <- select(donnees2, match_encode_id, environment_id, predator_id, pred_game_duration,
-                        total_chase_duration, pred_speed, prey_avg_speed, prey_var_speed,
-                        guard_time_close, guard_time_total, latency_1st_capture, prey_total_unhook_count,
-                        killed_count, sacrificed_count, hunting_success, cumul_xp_killer, total_xp_killer)
+                         predator_avatar_id, total_chase_duration, pred_speed, pred_amount_tiles_visited,
+                         points_predator, total_chase_duration, prey_avg_speed, prey_var_speed,
+                         guard_time_close, guard_time_total, latency_1st_capture, hook_count,
+                         prey_total_unhook_count, killed_count, sacrificed_count, hunting_success,
+                         cumul_xp_killer, total_xp_killer)
 
 
 #Table with unique lines (not every line for a single match for each prey)
@@ -30,7 +32,7 @@ setDT(donnees2_unique)
 
 
 
-#---------Guarding time section ----------------------
+# Guarding time section -------------------------------------
 
 
 #Count the number of matches that have a guarding time of 0 but where prey were sacrificed (false 0s)
@@ -59,5 +61,39 @@ count(donnees2_unique[(guard_time_total == 0 & latency_1st_capture == "NA")])
 qplot(x = cumul_xp_killer, y = guard_time_total, data = donnees2_unique)
 
 
+#Distribution of the response variable (guarding time) with and without a square root transformation
 hist(donnees2_unique$guard_time_total)
 hist(sqrt(donnees2_unique$guard_time_total))
+
+
+
+# Speed section --------------------------------------------
+
+
+#Distribution of predator speed data
+hist(donnees2_unique$pred_speed)
+hist(donnees2_unique$pred_speed, xlim = c(0, 1), ylim = c(0, 1000), breaks = 100)
+
+hist(donnees2_unique$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
+
+#Count the number of matches that have a speed of 0
+count(donnees2_unique[(pred_amount_tiles_visited > 0 & pred_amount_tiles_visited <= 10)])
+
+min(donnees2$pred_speed)
+
+
+
+
+
+
+# Chase time section --------------------------------------
+
+#Distribution of chase time in the data
+hist(donnees2_unique$total_chase_duration, breaks = 100)
+
+#Minimum value of chase time
+min(donnees2_unique$total_chase_duration)
+
+
+#How many 0s in chase time
+count(donnees2_unique[(total_chase_duration == 0)])
