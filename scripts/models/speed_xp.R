@@ -92,7 +92,7 @@ data[, c("Zpred_game_duration") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed_pred_avatar_expertise = brmsformula(pred_speed ~ 1 +
+form_speed_xp = brmsformula(pred_speed ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
                                        (1 + expertise | predator_id) +
@@ -135,7 +135,7 @@ priors <- c(
 
 
 #Modele complet
-modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_expertise,
+modele_speed_xp <- brm(formula = form_speed_xp,
                        warmup = 700,
                        iter = 6200,
                        thin = 22,
@@ -154,35 +154,35 @@ modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_ex
 
 # Save the model object ----------------------------------------------------
 
-saveRDS(modele_speed_xp_pred_avatar_expertise, file = "speed_xp_base_model_pred_avatar_expertise.rds")
+saveRDS(modele_speed_xp, file = "speed_xp_base_model2.rds")
 
 
 #Save plots and outputs ----------------------------------------------------
 
 #Parameter value around posterior distribution
-mean_plot <- brms::pp_check(modele_speed_xp_pred_avatar_expertise,
+mean_plot <- brms::pp_check(modele_speed_xp,
                             type = 'stat',
                             stat = 'mean')
 
 #Observed y outcomes vs posterior predicted outcomes
-dens_plot <- brms::pp_check(modele_speed_xp_pred_avatar_expertise,
+dens_plot <- brms::pp_check(modele_speed_xp,
                             type = "dens_overlay")
 
 
 
 #Export the plots ---------------------------------------------------------
 ggexport(mean_plot,
-         filename = "./outputs/plots/SP_xp_pred_avatar_expertise_mean.png",
+         filename = "./outputs/plots/SP_xp_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
 ggexport(dens_plot,
-         filename = "./outputs/plots/SP_xp_pred_avatar_expertise_outcomes.png",
+         filename = "./outputs/plots/SP_xp_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 #Export txt file for summary
-sink("./outputs/plots/SP_xp_expertise_summary.txt")
-print(summary(modele_speed_xp_pred_avatar_expertise))
+sink("./outputs/plots/SP_xp_summary.txt")
+print(summary(modele_speed_xp))
 sink()
 
 
