@@ -97,6 +97,8 @@ donnees_unique[, c("Zpred_game_duration", "Zpred_speed") :=
        lapply(.SD, standardize),
      .SDcols = c(5, 9)]
 
+hist(donnees_unique$Zpred_speed)
+
 #----- Test frequentistes --------------
 
 #Modele lineaire entre les deux (pas bayesien)

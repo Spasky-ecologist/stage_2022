@@ -71,8 +71,22 @@ hist(sqrt(donnees2_unique$guard_time_total))
 
 
 #Distribution of predator speed data
-hist(donnees2_unique$pred_speed, breaks = 250)
+hist(donnees2_unique$pred_speed)
 hist(donnees2_unique$pred_speed, xlim = c(0, 0.1), ylim = c(0, 500), breaks = 5550)
+
+
+#Standardize function
+standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
+    sd(x, na.rm = TRUE)}
+
+#Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
+donnees2_unique[, c("Zpred_speed") :=
+              lapply(.SD, standardize), 
+            .SDcols = 7]
+
+
+hist(donnees2_unique$Zpred_speed)
+
 
 min(donnees2$pred_speed)
 
