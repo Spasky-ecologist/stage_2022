@@ -1,0 +1,77 @@
+ Family: gaussian 
+  Links: mu = identity; sigma = log 
+Formula: total_chase_duration ~ 1 + expertise + Zpred_game_duration + (1 + expertise | predator_id) + (1 | predator_avatar_id) 
+         sigma ~ 1 + expertise + Zpred_game_duration + (1 + expertise | predator_id)
+   Data: data (Number of observations: 88496) 
+  Draws: 4 chains, each with iter = 6200; warmup = 700; thin = 22;
+         total post-warmup draws = 1000
+
+Group-Level Effects: 
+~predator_avatar_id (Number of levels: 23) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)    30.14      0.53    29.06    31.15 1.00      812      918
+
+~predator_id (Number of levels: 341) 
+                                                 Estimate Est.Error l-95% CI
+sd(Intercept)                                       10.92      0.53     9.92
+sd(expertiseinterm)                                  4.26      0.71     2.87
+sd(expertisenovice)                                  7.27      0.70     5.86
+sd(sigma_Intercept)                                  0.12      0.01     0.10
+sd(sigma_expertiseinterm)                            0.09      0.01     0.06
+sd(sigma_expertisenovice)                            0.12      0.01     0.10
+cor(Intercept,expertiseinterm)                       0.68      0.15     0.36
+cor(Intercept,expertisenovice)                       0.04      0.10    -0.15
+cor(expertiseinterm,expertisenovice)                -0.13      0.19    -0.52
+cor(sigma_Intercept,sigma_expertiseinterm)          -0.54      0.10    -0.71
+cor(sigma_Intercept,sigma_expertisenovice)          -0.45      0.10    -0.63
+cor(sigma_expertiseinterm,sigma_expertisenovice)     0.55      0.11     0.30
+                                                 u-95% CI Rhat Bulk_ESS
+sd(Intercept)                                       11.91 1.00      969
+sd(expertiseinterm)                                  5.81 1.00      772
+sd(expertisenovice)                                  8.66 1.00      717
+sd(sigma_Intercept)                                  0.15 1.00      979
+sd(sigma_expertiseinterm)                            0.12 1.00     1029
+sd(sigma_expertisenovice)                            0.15 1.00     1013
+cor(Intercept,expertiseinterm)                       0.95 1.00      733
+cor(Intercept,expertisenovice)                       0.22 1.01      738
+cor(expertiseinterm,expertisenovice)                 0.21 1.00      580
+cor(sigma_Intercept,sigma_expertiseinterm)          -0.30 1.00      912
+cor(sigma_Intercept,sigma_expertisenovice)          -0.24 1.00      913
+cor(sigma_expertiseinterm,sigma_expertisenovice)     0.75 1.00     1007
+                                                 Tail_ESS
+sd(Intercept)                                         902
+sd(expertiseinterm)                                   965
+sd(expertisenovice)                                   930
+sd(sigma_Intercept)                                  1032
+sd(sigma_expertiseinterm)                             995
+sd(sigma_expertisenovice)                             875
+cor(Intercept,expertiseinterm)                        968
+cor(Intercept,expertisenovice)                        674
+cor(expertiseinterm,expertisenovice)                  826
+cor(sigma_Intercept,sigma_expertiseinterm)            950
+cor(sigma_Intercept,sigma_expertisenovice)            882
+cor(sigma_expertiseinterm,sigma_expertisenovice)      979
+
+Population-Level Effects: 
+                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+Intercept                     9.39      1.20     6.96    11.60 1.00     1117
+sigma_Intercept               4.22      0.01     4.20     4.25 1.00     1012
+expertiseinterm              -1.82      0.76    -3.33    -0.41 1.00      975
+expertisenovice              -7.61      0.88    -9.40    -5.83 1.00     1023
+Zpred_game_duration          49.97      0.27    49.46    50.53 1.00      972
+sigma_expertiseinterm         0.02      0.01    -0.00     0.04 1.00     1032
+sigma_expertisenovice         0.06      0.01     0.04     0.09 1.00     1016
+sigma_Zpred_game_duration     0.19      0.00     0.19     0.20 1.00     1081
+                          Tail_ESS
+Intercept                      951
+sigma_Intercept                898
+expertiseinterm                912
+expertisenovice                970
+Zpred_game_duration            952
+sigma_expertiseinterm         1028
+sigma_expertisenovice          933
+sigma_Zpred_game_duration      993
+
+Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
