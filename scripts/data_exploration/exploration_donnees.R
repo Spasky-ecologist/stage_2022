@@ -28,7 +28,7 @@ donnees_select <- select(donnees, match_encode_id, game_mode, environment_id, pr
 
 #Selectionner les colonnes d'interets mais moins pour faire un tableau des predateur unique
 donnees_small <- select(donnees, match_encode_id, environment_id, predator_id, predator_avatar_id,
-                        pred_game_duration, total_chase_duration, avg_chase_duration, 
+                        pred_game_duration, pred_amount_tiles_visited, total_chase_duration, avg_chase_duration, 
                         pred_speed, prey_avg_speed, prey_var_speed, guard_time_close, guard_time_total,
                         latency_1st_capture, prey_total_unhook_count, hunting_success, cumul_xp_killer)
 
@@ -82,6 +82,20 @@ donnees_select$game_mode <- as.factor(donnees_select$game_mode)
 #Distribution des points entre l'xp du predateur et le temps a guarder (total)  
 qplot(x = cumul_xp_killer, y = guard_time_total, data = donnees_select)
 
+
+# Speed ---------------------------------------------------------------------
+
+hist(donnees_unique$pred_speed)
+hist(donnees_unique$pred_speed, xlim = c(0, 0.5), ylim = c(0, 40), breaks = 5550)
+
+#Remove the 94 matches with 2 tiles or less and speed below 0.21 m/s
+donnees_unique <- (donnees_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+
+
+#Use standardisation formula on game duration and add a new column
+donnees_unique[, c("Zpred_game_duration", "Zpred_speed") :=
+       lapply(.SD, standardize),
+     .SDcols = c(5, 9)]
 
 #----- Test frequentistes --------------
 
