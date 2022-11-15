@@ -131,7 +131,6 @@ table <- table[, c(7,6,4,5,1,2,3)]
 # On fait ensuite le carré pour avoir en unités détransformées
 
 table[Parameter == "sigma", value := exp(value)]
-table[Parameter == "sigma", value := value^2]
 
  
 
