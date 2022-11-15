@@ -69,10 +69,15 @@ hist(sqrt(donnees2_unique$guard_time_total))
 
 # Speed section --------------------------------------------
 
+data_unique2 <- select(donnees2, match_encode_id, pred_game_duration, predator_id, pred_speed,
+                         predator_avatar_id, total_chase_duration, cumul_xp_killer,
+                        pred_amount_tiles_visited)
+
+
 
 #Distribution of predator speed data
-hist(donnees2_unique$pred_speed)
-hist(donnees2_unique$pred_speed, xlim = c(0, 0.1), ylim = c(0, 500), breaks = 5550)
+hist(data_unique2$pred_speed)
+hist(data_unique2$pred_speed, xlim = c(0, 0.1), ylim = c(0, 500), breaks = 5550)
 
 
 #Standardize function
@@ -80,35 +85,38 @@ standardize = function (x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
 #Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
-donnees2_unique[, c("Zpred_speed") :=
+data_unique2[, c("Zpred_speed") :=
               lapply(.SD, standardize), 
             .SDcols = 7]
 
 
-hist(donnees2_unique$Zpred_speed)
+hist(data_unique2$Zpred_speed)
 
 
-min(donnees2$pred_speed)
+min(data_unique2$pred_speed)
 
 
 
-hist(donnees2_unique$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
+hist(data_unique2$pred_amount_tiles_visited, xlim = c(0, 10), ylim = c(0, 1000), breaks = 100)
 
 #Count the number of matches that have a speed of 0
-count(donnees2_unique[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+count(data_unique2[(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+
 
 
 
 #Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
-donnees2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
+setDT(data_unique2)
+data_unique2 <- (unique(data_unique2))
+data_unique2 <- (data_unique2[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 
 
 #Distribution of speed after the removal of matches
-hist(donnees2_unique$pred_speed)
+hist(data_unique2$pred_speed)
 
 #Distribution of tiles visited by predator after the removal of matches
-hist(donnees2_unique$pred_amount_tiles_visited)
+hist(data_unique2$pred_amount_tiles_visited)
 
 
 
