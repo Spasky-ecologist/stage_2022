@@ -28,10 +28,14 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "predator_id",
-                         "predator_avatar_id", "pred_speed", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "pred_amount_tiles_visited",
+                         "predator_id", "predator_avatar_id", "pred_speed", "cumul_xp_killer"))
 
 data <- unique(data)
+
+
+#Remove the 94 matches with 2 tiles or less and speed below 0.21 m/s
+data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # ==========================================================================
 # ==========================================================================
@@ -68,10 +72,10 @@ data$expertise = as.factor(data$expertise)
 standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
     sd(x, na.rm = TRUE)}
 
-#Use standardisation formula on game duration and add a new column
-data[, c("Zpred_game_duration") :=
+#Use standardisation formula on game duration + predator speed and add a new column
+data[, c("Zpred_game_duration", "Zpred_speed") :=
        lapply(.SD, standardize),
-     .SDcols = 2]
+     .SDcols = c(2, 6)]
 
 # ==========================================================================
 # ==========================================================================
@@ -91,7 +95,7 @@ data[, c("Zpred_game_duration") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed_pred_avatar_expertise = brmsformula(pred_speed ~ 1 +
+form_speed_pred_avatar_expertise = brmsformula(Zpred_speed ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
                                        (1 + expertise | predator_id) +
