@@ -143,3 +143,6 @@ count(donnees2_unique[(total_chase_duration > 0 & total_chase_duration <= 2)])
   #The predator is most likely afk
 donnees2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
+
+hist(sqrt(donnees2_unique$total_chase_duration))
+
