@@ -28,10 +28,15 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "predator_id",
-                         "predator_avatar_id", "avg_chase_duration", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "predator_id", "pred_speed",
+                         "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
+                         "pred_amount_tiles_visited"))
 
 data <- unique(data)
+
+
+#Remove the 739 matches with a speed less than 0.21 with 2 or less tiles visited (there's a spike in the data)
+data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # ==========================================================================
 # ==========================================================================
@@ -48,6 +53,7 @@ data <- unique(data)
 
 # Transform ----------------------------------------------------------------
 
+data[, ":=" (total_chase_duration_sqrt = sqrt(total_chase_duration))]
 
 #Add in expertise level ----------------------------------------------------
 
@@ -88,7 +94,7 @@ data[, c("Zpred_game_duration") :=
 
 # linear model formula -----------------------------------------------------
 
-form_chase_pred_avatar_expertise <- brmsformula(avg_chase_duration ~ 1 +
+form_chase_pred_avatar_expertise <- brmsformula(total_chase_duration_sqrt ~ 1 +
                                         expertise +
                                         Zpred_game_duration +
                                         (1 + expertise | predator_id) +
@@ -134,9 +140,9 @@ priors <- c(
 
 #Modele complet
 modele_chase_xp_pred_avatar_expertise <- brm(formula = form_chase_pred_avatar_expertise,
-                  warmup = 500,
-                  iter = 3500,
-                  thin = 12,
+                  warmup = 700,
+                  iter = 6200,
+                  thin = 22,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
@@ -153,37 +159,6 @@ modele_chase_xp_pred_avatar_expertise <- brm(formula = form_chase_pred_avatar_ex
 # Save the model object ----------------------------------------------------
 
 saveRDS(modele_chase_xp_pred_avatar_expertise, file = "chase_time_xp_base_model_pred_avatar_expertise.rds")
-
-
-
-#Save plots and outputs ----------------------------------------------------
-
-#Parameter value around posterior distribution
-mean_plot <- brms::pp_check(modele_chase_xp_pred_avatar_expertise,
-                            type = 'stat',
-                            stat = 'mean')
-
-#Observed y outcomes vs posterior predicted outcomes
-dens_plot <- brms::pp_check(modele_chase_xp_pred_avatar_expertise,
-                            type = "dens_overlay")
-
-
-
-#Export the plots ---------------------------------------------------------
-ggexport(mean_plot,
-         filename = "./outputs/plots/CT_xp_pred_avatar_expertise_mean.png",
-         width = 1500, height = 1500, res = 300)
-
-
-ggexport(dens_plot,
-         filename = "./outputs/plots/CT_xp_pred_avatar_expertise_outcomes.png",
-         width = 1500, height = 1500, res = 300)
-
-#Export txt file for summary
-sink("./outputs/plots/CT_xp_expertise_summary.txt")
-print(summary(modele_chase_xp_pred_avatar_expertise))
-sink()
-
 
 
 # Capture the session ------------------------------------------------------
