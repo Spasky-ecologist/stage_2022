@@ -74,13 +74,15 @@ hist(donnees2_unique$pred_speed)
 hist(donnees2_unique$pred_speed, xlim = c(0, 0.1), ylim = c(0, 500), breaks = 5550)
 
 hist(sqrt(donnees2_unique$pred_speed))
+hist(sqrt(donnees2_unique$pred_speed), xlim = c(0.15, 1), ylim = c(0, 60), breaks = 50)
 
 
 #Standardize function
 standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
     sd(x, na.rm = TRUE)}
 
-#Utiliser la fonction de standardisation sur les variables des colonnes specifiees et creer des nouvelles colonnes
+#Utiliser la fonction de standardisation sur les variables des colonnes specifiees
+#et creer des nouvelles colonnes
 donnees2_unique[, c("Zpred_speed") :=
               lapply(.SD, standardize), 
             .SDcols = 7]
@@ -89,7 +91,7 @@ donnees2_unique[, c("Zpred_speed") :=
 hist(donnees2_unique$Zpred_speed)
 
 
-min(donnees2_unique$pred_speed)
+min(sqrt(donnees2_unique$pred_speed))
 
 
 
