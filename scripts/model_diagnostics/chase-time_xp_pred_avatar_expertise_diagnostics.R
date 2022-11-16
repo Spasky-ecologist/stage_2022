@@ -1,4 +1,4 @@
-#Model diagnostic script for chase-time_xp.R
+#Model diagnostic script for chase-time_xp_pred_avatar_expertise.R
 #Author : Patrice Leveille
 
 
@@ -29,7 +29,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/chase_time_xp_base_model_pred_avatar.rds")
+model <- readRDS("outputs/R_objects/chase_time_xp_base_model_pred_avatar_expertise.rds")
 
 
 
