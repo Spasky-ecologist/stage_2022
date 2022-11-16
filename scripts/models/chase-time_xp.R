@@ -52,7 +52,7 @@ data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # Transform ----------------------------------------------------------------
 
-
+data[, ":=" (total_chase_duration_sqrt = sqrt(total_chase_duration))]
 
 #Add in expertise level ----------------------------------------------------
 
@@ -95,7 +95,7 @@ data[, c("Zpred_game_duration") :=
 
 # linear model formula -----------------------------------------------------
 
-form_chase_time_xp = brmsformula(total_chase_duration ~ 1 +
+form_chase_time_xp = brmsformula(total_chase_duration_sqrt ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
                                        (1 + expertise | predator_id) +
