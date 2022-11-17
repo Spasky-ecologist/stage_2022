@@ -132,7 +132,7 @@ table <- table[, c(7,6,4,5,1,2,3)]
 table[Parameter == "sigma", value := exp(value)]
 table[Parameter == "sigma", value := value^2]
 
-#Backtransform the sqrt of guard time (?)
+#Backtransform the sqrt of guard time
  table[Parameter == "mu", value := value^2]
 
  
