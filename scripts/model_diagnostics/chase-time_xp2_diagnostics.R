@@ -68,7 +68,7 @@ bayesplot_grid(pp_check(model, type = 'stat', stat = "mean"))
 
 
 #Distribution de notre echantillon vs les sims
-bayesplot_grid(pp_check(model, ndraws = 100))
+bayesplot_grid(pp_check(model))
 
 
 #Resume du modele
