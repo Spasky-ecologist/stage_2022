@@ -139,9 +139,9 @@ priors <- c(
 
 #Modele complet
 modele_chase_time_xp <- brm(formula = form_chase_time_xp,
-                       warmup = 700,
-                       iter = 6200,
-                       thin = 22,
+                       warmup = 1000,
+                       iter = 10500,
+                       thin = 38,
                        chains = 4, 
                        threads = threading(12),
                        backend = "cmdstanr",
