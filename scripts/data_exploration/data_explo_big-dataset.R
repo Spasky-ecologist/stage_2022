@@ -113,6 +113,8 @@ donnees2_unique <- (donnees2_unique[!(pred_amount_tiles_visited <= 2 & pred_spee
 #Distribution of speed after the removal of matches
 hist(donnees2_unique$pred_speed)
 
+hist(sqrt(donnees2_unique$pred_speed))
+
 #Distribution of tiles visited by predator after the removal of matches
 hist(donnees2_unique$pred_amount_tiles_visited)
 
