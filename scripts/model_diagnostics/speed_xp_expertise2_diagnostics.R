@@ -31,7 +31,7 @@ library(ggplot2)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/speed_xp_base_model_pred_avatar_expertise2.rds")
+model <- readRDS("outputs/R_objects/speed_xp_base_model2.rds")
 
 
 # Prepare model draws --------------------------------------------------------------
