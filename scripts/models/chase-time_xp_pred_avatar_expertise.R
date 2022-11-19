@@ -97,8 +97,7 @@ data[, c("Zpred_game_duration") :=
 form_chase_pred_avatar_expertise <- brmsformula(total_chase_duration_sqrt ~ 1 +
                                         expertise +
                                         Zpred_game_duration +
-                                        (1 + expertise | predator_id) +
-                                        (1 | predator_avatar_id), 
+                                        (1 + expertise | predator_id), 
                                       sigma ~ 1 + expertise + Zpred_game_duration +
                                         (1 + expertise | predator_id)) +
                                   gaussian()
@@ -142,14 +141,14 @@ priors <- c(
 #Modele complet
 modele_chase_xp_pred_avatar_expertise <- brm(formula = form_chase_pred_avatar_expertise,
                   warmup = 1000,
-                  iter = 10500,
-                  thin = 38,
+                  iter = 16000,
+                  thin = 60,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
                   seed = 123,
                   prior = priors,
-                  control = list(adapt_delta = 0.95),
+                  control = list(adapt_delta = 0.99),
                   save_pars = save_pars(all = TRUE),
                   sample_prior = TRUE,
                   init = 0,
