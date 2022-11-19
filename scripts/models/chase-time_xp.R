@@ -109,8 +109,9 @@ form_chase_time_xp = brmsformula(total_chase_duration_sqrt ~ 1 +
 
 priors <- c(
   # priors on fixed effects
-  set_prior("normal(0, 2)",
-            class = "b"),
+  set_prior("normal(0, 1)",
+            class = "b",
+            lb = 0),
   # prior on the intercept
   set_prior("normal(1, 1)",
             class = "Intercept",
@@ -147,9 +148,10 @@ modele_chase_time_xp <- brm(formula = form_chase_time_xp,
                        backend = "cmdstanr",
                        seed = 123,
                        prior = priors,
-                       control = list(adapt_delta = 0.95),
+                       control = list(adapt_delta = 0.99),
                        save_pars = save_pars(all = TRUE),
                        sample_prior = TRUE,
+                       init = 0,
                        data = data)
 
 
