@@ -28,7 +28,7 @@ library(ggpubr)
 
 # Load models -----------------------------------------------------------
 
-model <- readRDS("outputs/R_objects/speed_xp_base_model_pred_avatar.rds")
+model <- readRDS("outputs/R_objects/speed_xp_base_model_pred_avatar_expertise.rds")
 
 
 # Prepare model draws --------------------------------------------------------------
