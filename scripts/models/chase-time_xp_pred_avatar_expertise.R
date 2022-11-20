@@ -141,8 +141,8 @@ priors <- c(
 #Modele complet
 modele_chase_xp_pred_avatar_expertise <- brm(formula = form_chase_pred_avatar_expertise,
                   warmup = 1000,
-                  iter = 16000,
-                  thin = 60,
+                  iter = 21000,
+                  thin = 80,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
