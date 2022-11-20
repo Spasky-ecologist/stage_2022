@@ -74,9 +74,9 @@ standardize = function (x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
 #Use standardisation formula on game duration + predator speed and add a new column
-data[, c("Zpred_game_duration", "Zpred_speed_sqrt") :=
+data[, c("Zpred_game_duration") :=
        lapply(.SD, standardize),
-     .SDcols = c(2, 9)]
+     .SDcols = 2]
 
 # ==========================================================================
 # ==========================================================================
@@ -96,7 +96,7 @@ data[, c("Zpred_game_duration", "Zpred_speed_sqrt") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed_pred_avatar_expertise = brmsformula(Zpred_speed_sqrt ~ 1 +
+form_speed_pred_avatar_expertise = brmsformula(pred_speed_sqrt ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
                                        (1 + expertise | predator_id) +
