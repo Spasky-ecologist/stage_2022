@@ -110,11 +110,11 @@ form_speed_pred_avatar_expertise = brmsformula(pred_speed_sqrt ~ 1 +
 
 priors <- c(
   # priors on fixed effects
-  set_prior("normal(0, 2)",
+  set_prior("normal(0, 1)",
             class = "b",
             lb = 0),
   # prior on the intercept
-  set_prior("normal(1, 1)",
+  set_prior("normal(1, 0.5)",
             class = "Intercept",
             lb = 0),
   # priors on variance parameters
