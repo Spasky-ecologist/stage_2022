@@ -91,13 +91,17 @@ hist(donnees_unique$pred_speed, xlim = c(0, 0.5), ylim = c(0, 40), breaks = 5550
 #Remove the 94 matches with 2 tiles or less and speed below 0.21 m/s
 donnees_unique <- (donnees_unique[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
+donnees_unique[, ":=" (pred_speed_sqrt = sqrt(pred_speed))]
+
+hist(donnees_unique$pred_speed_sqrt)
+
 
 #Use standardisation formula on game duration and add a new column
 donnees_unique[, c("Zpred_game_duration", "Zpred_speed") :=
        lapply(.SD, standardize),
      .SDcols = c(5, 9)]
 
-hist(donnees_unique$Zpred_speed)
+hist(sqrt(donnees_unique$Zpred_speed))
 
 #----- Test frequentistes --------------
 
