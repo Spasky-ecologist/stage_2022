@@ -28,8 +28,9 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "pred_amount_tiles_visited",
-                         "predator_id", "predator_avatar_id", "pred_speed", "cumul_xp_killer"))
+              select = c("match_encode_id", "pred_game_duration", "predator_id", "pred_speed",
+                         "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
+                         "pred_amount_tiles_visited"))
 
 data <- unique(data)
 
@@ -52,7 +53,7 @@ data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # Transform ----------------------------------------------------------------
 
-
+data[, ":=" (pred_speed_sqrt = sqrt(pred_speed))]
 
 #Add in expertise level ----------------------------------------------------
 
@@ -73,9 +74,9 @@ standardize = function (x) {(x - mean(x, na.rm = TRUE)) /
     sd(x, na.rm = TRUE)}
 
 #Use standardisation formula on game duration + predator speed and add a new column
-data[, c("Zpred_game_duration", "Zpred_speed") :=
+data[, c("Zpred_game_duration") :=
        lapply(.SD, standardize),
-     .SDcols = c(2, 6)]
+     .SDcols = 2]
 
 # ==========================================================================
 # ==========================================================================
@@ -95,7 +96,7 @@ data[, c("Zpred_game_duration", "Zpred_speed") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed_pred_avatar_expertise = brmsformula(Zpred_speed ~ 1 +
+form_speed_pred_avatar_expertise = brmsformula(pred_speed_sqrt ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
                                        (1 + expertise | predator_id) +
@@ -110,7 +111,8 @@ form_speed_pred_avatar_expertise = brmsformula(Zpred_speed ~ 1 +
 priors <- c(
   # priors on fixed effects
   set_prior("normal(0, 2)",
-            class = "b"),
+            class = "b",
+            lb = 0),
   # prior on the intercept
   set_prior("normal(1, 1)",
             class = "Intercept",
@@ -139,9 +141,9 @@ priors <- c(
 
 #Modele complet
 modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_expertise,
-                       warmup = 700,
-                       iter = 6200,
-                       thin = 22,
+                       warmup = 1000,
+                       iter = 21000,
+                       thin = 80,
                        chains = 4, 
                        threads = threading(12),
                        backend = "cmdstanr",
@@ -150,6 +152,7 @@ modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_ex
                        control = list(adapt_delta = 0.95),
                        save_pars = save_pars(all = TRUE),
                        sample_prior = TRUE,
+                       init = 0,
                        data = data)
 
 
