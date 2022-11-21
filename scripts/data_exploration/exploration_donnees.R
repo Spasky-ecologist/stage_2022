@@ -103,6 +103,20 @@ donnees_unique[, c("Zpred_game_duration", "Zpred_speed") :=
 
 hist(sqrt(donnees_unique$Zpred_speed))
 
+hist(sqrt(donnees_unique$pred_speed + 0.5))
+
+
+#More complex transformations
+
+hist(sqrt(max(donnees_unique$pred_speed + 1) - donnees_unique$pred_speed))
+
+
+hist(log10(max(donnees_unique$pred_speed + 1) - donnees_unique$pred_speed))
+
+
+donnees_unique[, ":=" (pred_speed_log = log10(max(pred_speed + 1) - pred_speed))]
+
+
 #----- Test frequentistes --------------
 
 #Modele lineaire entre les deux (pas bayesien)
