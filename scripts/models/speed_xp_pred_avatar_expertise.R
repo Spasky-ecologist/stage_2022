@@ -70,13 +70,13 @@ data$expertise = as.factor(data$expertise)
 # Standardise the variables (Z-scores) -------------------------------------
 
 #Fonction pour standardiser
-standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
-    sd(x, na.rm = TRUE)}
+#standardize = function (x) {(x - mean(x, na.rm = TRUE)) / 
+#    sd(x, na.rm = TRUE)}
 
 #Use standardisation formula on game duration + predator speed and add a new column
-data[, c("Zpred_game_duration") :=
-       lapply(.SD, standardize),
-     .SDcols = 2]
+#data[, c("Zpred_game_duration") :=
+#       lapply(.SD, standardize),
+#     .SDcols = 2]
 
 # ==========================================================================
 # ==========================================================================
