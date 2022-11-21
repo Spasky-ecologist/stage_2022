@@ -232,7 +232,7 @@ figure <- ggarrange(plot1, plot2,
 
 # Save figure
 ggexport(figure,
-         filename = file.path(path, "GT_xp_expertiseMFF.png"),
+         filename = file.path(path, "GT_xp_small-db.png"),
          width = 3500,
          height = 1600,
          res = 300)
