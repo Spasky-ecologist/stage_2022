@@ -148,10 +148,10 @@ modele_speed_xp_pred_avatar_expertise <- brm(formula = form_speed_pred_avatar_ex
                        backend = "cmdstanr",
                        seed = 123,
                        prior = priors,
-                       control = list(adapt_delta = 0.95),
+                       control = list(adapt_delta = 0.99),
                        save_pars = save_pars(all = TRUE),
                        sample_prior = TRUE,
-                       init = 0,
+                       init = 1.8,
                        data = data)
 
 
