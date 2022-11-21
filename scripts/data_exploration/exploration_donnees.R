@@ -468,7 +468,7 @@ top_xp_pred = subset(donnees_select, donnees_select$predator_id == "4690186")
            title = "Guarding time and experience")
     
         #version boxplot
-        plot(data_expert$guard_time_total ~ factor(data_expert$expertise))
+        plot(donnees_unique$guard_time_total ~ factor(donnees_unique$hunting_success))
     
     #Vitesse
     ggplot(data_expert, aes(x = expertise, y = pred_speed)) +
