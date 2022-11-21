@@ -28,9 +28,9 @@ folder <- file.path("/home", "ab991036", "projects", "def-monti",
 
 # Import the data
 data <- fread(file.path(folder, "02_final-data.csv"),
-              select = c("match_encode_id", "pred_game_duration", "predator_id", "pred_speed",
-                         "predator_avatar_id", "total_chase_duration", "cumul_xp_killer",
-                         "pred_amount_tiles_visited"))
+              select = c("match_encode_id", "pred_game_duration",
+                         "predator_id", "pred_speed", "predator_avatar_id",
+                         "total_chase_duration", "cumul_xp_killer", "pred_amount_tiles_visited"))
 
 data <- unique(data)
 
@@ -53,7 +53,7 @@ data <- (data[!(pred_amount_tiles_visited <= 2 & pred_speed < 0.21)])
 
 # Transform ----------------------------------------------------------------
 
-data[, ":=" (pred_speed_log = log10(max(pred_speed + 1) - pred_speed))]
+data[, ":=" (pred_speed_sqrt = sqrt(pred_speed))]
 
 #Add in expertise level ----------------------------------------------------
 
@@ -96,12 +96,11 @@ data[, c("Zpred_game_duration") :=
 
 # linear model formula -----------------------------------------------------
 
-form_speed_pred_avatar_expertise = brmsformula(pred_speed_log ~ 1 +
+form_speed_pred_avatar_expertise = brmsformula(pred_speed_sqrt ~ 1 +
                                        expertise +
-                                       Zpred_game_duration +
                                        (1 + expertise | predator_id) +
                                        (1 | predator_avatar_id), 
-                                     sigma ~ 1 + expertise + Zpred_game_duration +
+                                     sigma ~ 1 + expertise +
                                        (1 + expertise | predator_id)) +
                                 gaussian()
 
