@@ -98,8 +98,7 @@ data[, c("Zpred_game_duration") :=
 form_chase_time_xp = brmsformula(total_chase_duration_sqrt ~ 1 +
                                        expertise +
                                        Zpred_game_duration +
-                                       (1 + expertise | predator_id) +
-                                       (1 | predator_avatar_id), 
+                                       (1 + expertise | predator_id), 
                                      sigma ~ 1 + expertise + Zpred_game_duration +
                                        (1 + expertise | predator_id)) +
                                 gaussian()
