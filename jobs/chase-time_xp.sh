@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=48
 #SBATCH --mem=32000M
-#SBATCH --time=00-21:30
+#SBATCH --time=01-05:00
 #SBATCH --mail-user=leveille.patrice@courrier.uqam.ca
 #SBATCH --mail-type=ALL
 module load StdEnv/2020
