@@ -1,4 +1,4 @@
-#Script to generate the plots for speed_xp.R
+#Script to generate the plots for speed_xp_pred_avatar_expertise.R
 #Author : Patrice Leveille
 
 
@@ -34,7 +34,7 @@ path <- "./outputs/tables"
 # MFF je change le chemin pour un chemin de notre dossier
 path <- file.path(getwd(), "model_outputs")
 
-tab <- readRDS(file.path(path, "SP_xp_table2.rds"))
+tab <- readRDS(file.path(path, "SP_xp_table_small-db.rds"))
 
 
 # Rename the XP variable
@@ -119,8 +119,8 @@ plot1 <- ggplot(tab[Parameter == "mu"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(0, 4, 0.5),
-                     limits = c(0, 4)) +
+  scale_y_continuous(breaks = seq(3, 3.5, 0.1),
+                     limits = c(3, 3.5)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nVitesse moyenne (m/s)") +
   xlab("\nNiveau d'expérience") +
@@ -147,8 +147,8 @@ plot2 <- ggplot(tab[Parameter == "sigma"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(0, 6, 2),
-                     limits = c(0, 7)) +
+  scale_y_continuous(breaks = seq(0, 0.015, 0.005),
+                     limits = c(0, 0.015)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nÉcart-type de la vitesse (m/s)") +
   xlab("\nNiveau d'expérience") +
@@ -176,7 +176,7 @@ figure <- ggarrange(plot1, plot2,
 
 # Save figure
 ggexport(figure,
-         filename = file.path(path, "SP_xp_2.png"),
+         filename = file.path(path, "SP_xp_small-db.png"),
          width = 3500,
          height = 1600,
          res = 300)
