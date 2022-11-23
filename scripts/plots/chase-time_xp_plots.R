@@ -119,8 +119,8 @@ plot1 <- ggplot(tab[Parameter == "mu"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(-1, 12, 1),
-                     limits = c(-1, 12)) +
+  scale_y_continuous(breaks = seq(178, 192, 2),
+                     limits = c(178, 192)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nTemps de poursuite moyen (s)") +
   xlab("\nNiveau d'expérience") +
