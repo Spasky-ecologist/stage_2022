@@ -232,15 +232,15 @@ param_plot <- brms::pp_check(model,
 
 # Export the plots
 ggexport(dens_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_outcomes.png",
+         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_expertise_outcomes.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(error_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_diagnostic2.png",
+         filename = "./outputs/model_diagnostics/GT_xp_diagnostic.png",
          width = 1500, height = 1500, res = 300)
 
 ggexport(param_plot,
-         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_mean.png",
+         filename = "./outputs/model_diagnostics/GT_xp_pred_avatar_expertise_mean.png",
          width = 1500, height = 1500, res = 300)
 
 
