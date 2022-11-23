@@ -147,8 +147,8 @@ plot2 <- ggplot(tab[Parameter == "sigma"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(65, 75, 1),
-                     limits = c(65, 75)) +
+  scale_y_continuous(breaks = seq(6, 8, 0.5),
+                     limits = c(6, 8)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nÉcart-type du temps poursuite (s)") +
   xlab("\nNiveau d'expérience") +
