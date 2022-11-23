@@ -98,8 +98,7 @@ data$expertise = as.factor(data$expertise)
 
 form_speed_pred_avatar_expertise = brmsformula(pred_speed_sqrt ~ 1 +
                                        expertise +
-                                       (1 + expertise | predator_id) +
-                                       (1 | predator_avatar_id), 
+                                       (1 + expertise | predator_id), 
                                      sigma ~ 1 + expertise +
                                        (1 + expertise | predator_id)) +
                                 gaussian()
@@ -112,7 +111,7 @@ priors <- c(
   set_prior("normal(0, 1)",
             class = "b"),
   # prior on the intercept
-  set_prior("normal(3, 1)",
+  set_prior("normal(1.75, 1)",
             class = "Intercept",
             lb = 0),
   # priors on variance parameters
