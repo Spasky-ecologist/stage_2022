@@ -119,8 +119,8 @@ plot1 <- ggplot(tab[Parameter == "mu"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(3, 3.5, 0.1),
-                     limits = c(3, 3.5)) +
+  scale_y_continuous(breaks = seq(3.2, 3.4, 0.05),
+                     limits = c(3.2, 3.4)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nVitesse moyenne (m/s)") +
   xlab("\nNiveau d'expérience") +
@@ -147,8 +147,8 @@ plot2 <- ggplot(tab[Parameter == "sigma"],
   scale_shape_manual(values = c(15, 16, 17)) +
   scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
   
-  scale_y_continuous(breaks = seq(0, 0.015, 0.005),
-                     limits = c(0, 0.015)) +
+  scale_y_continuous(breaks = seq(0.005, 0.02, 0.005),
+                     limits = c(0.005, 0.02)) +
   scale_x_discrete(expand = c(0,1)) +
   ylab("\nÉcart-type de la vitesse (m/s)") +
   xlab("\nNiveau d'expérience") +
