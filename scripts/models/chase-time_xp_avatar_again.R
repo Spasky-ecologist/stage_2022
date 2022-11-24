@@ -110,8 +110,7 @@ form_chase_pred_avatar_expertise <- brmsformula(total_chase_duration_sqrt ~ 1 +
 priors <- c(
   # priors on fixed effects
   set_prior("normal(0, 2)",
-            class = "b",
-            lb = 0),
+            class = "b"),
   # prior on the intercept
   set_prior("normal(1, 1)",
             class = "Intercept",
@@ -142,8 +141,8 @@ priors <- c(
 #Modele complet
 modele_chase_xp_pred_avatar_expertise <- brm(formula = form_chase_pred_avatar_expertise,
                   warmup = 1000,
-                  iter = 21000,
-                  thin = 80,
+                  iter = 31000,
+                  thin = 120,
                   chains = 4, 
                   threads = threading(12),
                   backend = "cmdstanr",
