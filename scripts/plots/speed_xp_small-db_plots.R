@@ -131,6 +131,32 @@ plot1 <- ggplot(tab[Parameter == "mu"],
 
 
 
+
+#Version to have xp level as X axis
+plot1_v2 <- ggplot(tab[Parameter == "mu"],
+                   aes(x=xp_level, y=mean,
+                       color = xp_level,
+                       shape = xp_level)) +
+  
+  geom_pointrange(aes(ymin = lower_ci,
+                      ymax = upper_ci),
+                  size = 1.3,
+                  position = position_dodge(width = 0.3)) +
+  
+  scale_shape_manual(values = c(15, 16, 17)) +
+  scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
+  
+  scale_y_continuous(breaks = seq(3.2, 3.4, 0.05),
+                     limits = c(3.2, 3.4)) +
+  scale_x_discrete(expand = c(0,1)) +
+  ylab("\nVitesse moyenne (m/s)") +
+  xlab("\nNiveau d'expérience") +
+  custom_theme +
+  theme(legend.position = "none",
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)))
+
+
+
 # Plot sigma ------------------------------------------------------------
 
 # MFF version :
@@ -159,6 +185,34 @@ plot2 <- ggplot(tab[Parameter == "sigma"],
 
 
 
+
+
+#Version to have xp level as X axis
+plot2_v2 <- ggplot(tab[Parameter == "sigma"], 
+                   aes(x = xp_level, y = mean,
+                       color = xp_level,
+                       shape = xp_level)) +
+  
+  geom_pointrange(aes(ymin = lower_ci,
+                      ymax = upper_ci),
+                  size = 1.3,
+                  position = position_dodge(width = 0.3)) +
+  
+  scale_shape_manual(values = c(15, 16, 17)) +
+  scale_color_manual(values = c("#999999", "#E69F00", "#00AFBB")) +
+  
+  scale_y_continuous(breaks = seq(0.005, 0.02, 0.005),
+                     limits = c(0.005, 0.02)) +
+  scale_x_discrete(expand = c(0,1)) +
+  ylab("\nÉcart-type de la vitesse (m/s)") +
+  xlab("\nNiveau d'expérience") +
+  custom_theme +
+  theme(legend.position = "none",
+        axis.title.y = element_text(margin = margin(t = 0, r = 20, b = 0, l = 0)))
+
+
+
+
 # Combine as one figure ------------------------------------------------
 
 # Folder path
@@ -174,12 +228,33 @@ figure <- ggarrange(plot1, plot2,
                     )
 
 
+
+
+
+# Arrange paneled figure for v2
+figure <- ggarrange(plot1_v2, plot2_v2,
+                    ncol = 2, nrow = 1,
+                    labels = c("(A)", "(B)")
+                    #common.legend = TRUE,
+                    #legend = "top"
+)
+
+
 # Save figure
 ggexport(figure,
          filename = file.path(path, "SP_xp_small-db.png"),
          width = 3500,
          height = 1600,
          res = 300)
+
+
+# Save figure for v2
+ggexport(figure,
+         filename = file.path(path, "SP_xp_small-db_v2.png"),
+         width = 3500,
+         height = 1600,
+         res = 300)
+
 
 # =======================================================================
 # =======================================================================
